@@ -1,61 +1,65 @@
 {
-  "name": "Idle — Browser Extension Dev",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
-  },
+	"name": "Idle — Browser Extension Dev",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
 
-  // Forward WXT dev server so extension on host browser can hot-reload
-  "forwardPorts": [3000],
-  "portsAttributes": {
-    "3000": {
-      "label": "WXT Dev Server",
-      "onAutoForward": "silent"
-    }
-  },
+	// Forward WXT dev server so extension on host browser can hot-reload
+	"forwardPorts": [3000],
+	"portsAttributes": {
+		"3000": {
+			"label": "WXT Dev Server",
+			"onAutoForward": "silent"
+		}
+	},
 
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
+	"features": {
+		"ghcr.io/shyim/devcontainers-features/bun:0": {}
+	},
 
-  "mounts": [
-    "source=idle-bun-cache,target=/root/.bun/install/cache,type=volume",
-    "source=idle-pnpm-store,target=/root/.local/share/pnpm/store,type=volume"
-  ],
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
 
-  "remoteEnv": {
-    "WXT_HOST": "0.0.0.0",
-    "WXT_OPEN_BROWSER": "false"
-  },
+	"mounts": [
+		"source=idle-bun-cache,target=/root/.bun/install/cache,type=volume",
+		"source=idle-pnpm-store,target=/root/.local/share/pnpm/store,type=volume"
+	],
 
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "biomejs.biome",
-        "svelte.svelte-vscode",
-        "bradlc.vscode-tailwindcss",
-        "ms-vscode.vscode-typescript-next",
-        "vitest.explorer",
-        "ms-playwright.playwright",
-        "ms-azuretools.vscode-docker",
-        "ms-vscode-remote.remote-containers",
-        "streetsidesoftware.code-spell-checker"
-      ],
-      "settings": {
-        "editor.defaultFormatter": "biomejs.biome",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-          "source.fixAll.biome": "explicit",
-          "source.organizeImports.biome": "explicit"
-        },
-        "[svelte]": {
-          "editor.defaultFormatter": "svelte.svelte-vscode"
-        },
-        "typescript.tsdk": "node_modules/typescript/lib",
-        "typescript.enablePromptUseWorkspaceTsdk": true,
-        "vitest.enable": true,
-        "vitest.commandLine": "bun run test",
-        "playwright.reuseBrowser": false,
-        "playwright.showTrace": "on-failure"
-      }
-    }
-  }
+	"remoteEnv": {
+		"WXT_HOST": "0.0.0.0",
+		"WXT_OPEN_BROWSER": "false"
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"biomejs.biome",
+				"svelte.svelte-vscode",
+				"bradlc.vscode-tailwindcss",
+				"ms-vscode.vscode-typescript-next",
+				"vitest.explorer",
+				"ms-playwright.playwright",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode-remote.remote-containers",
+				"streetsidesoftware.code-spell-checker"
+			],
+			"settings": {
+				"editor.defaultFormatter": "biomejs.biome",
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll.biome": "explicit",
+					"source.organizeImports.biome": "explicit"
+				},
+				"[svelte]": {
+					"editor.defaultFormatter": "svelte.svelte-vscode"
+				},
+				"typescript.tsdk": "node_modules/typescript/lib",
+				"typescript.enablePromptUseWorkspaceTsdk": true,
+				"vitest.enable": true,
+				"vitest.commandLine": "bun run test",
+				"playwright.reuseBrowser": false,
+				"playwright.showTrace": "on-failure"
+			}
+		}
+	}
 }

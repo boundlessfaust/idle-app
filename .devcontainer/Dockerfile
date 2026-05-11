@@ -8,10 +8,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-liberation xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
-
 # Install pnpm as fallback (WXT scaffold requires npx; runtime can use bun)
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
