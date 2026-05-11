@@ -5,7 +5,18 @@
 		"context": ".."
 	},
 
-	// Forward WXT dev server so extension on host browser can hot-reload
+	"features": {
+		// Bun — official feature, handles PATH for all shell types
+		"ghcr.io/shyim/devcontainers-features/bun:0": {},
+		// Claude Code CLI — official Anthropic devcontainer feature
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+		// GitHub CLI — for PR workflow from inside container
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		}
+	},
+
 	"forwardPorts": [3000],
 	"portsAttributes": {
 		"3000": {
@@ -14,34 +25,47 @@
 		}
 	},
 
-	"features": {
-		"ghcr.io/shyim/devcontainers-features/bun:0": {}
-	},
-
 	"postCreateCommand": "bash .devcontainer/post-create.sh",
 
 	"mounts": [
+		// Bun package cache — persists across rebuilds
 		"source=idle-bun-cache,target=/root/.bun/install/cache,type=volume",
-		"source=idle-pnpm-store,target=/root/.local/share/pnpm/store,type=volume"
+		// pnpm store — fallback package manager
+		"source=idle-pnpm-store,target=/root/.local/share/pnpm/store,type=volume",
+		// Claude auth — persists login across rebuilds (avoids re-auth every rebuild)
+		"source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind,consistency=cached"
 	],
 
 	"remoteEnv": {
 		"WXT_HOST": "0.0.0.0",
-		"WXT_OPEN_BROWSER": "false"
+		"WXT_OPEN_BROWSER": "false",
+		// Required for Claude Code CLI to find its config inside the container
+		"CLAUDE_CONFIG_DIR": "/home/node/.claude"
 	},
 
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				// ── Claude Code ──────────────────────────────────────────
+				"anthropic.claude-code",
+				// ── Core dev ─────────────────────────────────────────────
 				"biomejs.biome",
 				"svelte.svelte-vscode",
 				"bradlc.vscode-tailwindcss",
 				"ms-vscode.vscode-typescript-next",
+				// ── Testing ──────────────────────────────────────────────
 				"vitest.explorer",
 				"ms-playwright.playwright",
+				// ── Git & infra ───────────────────────────────────────────
+				"eamodio.gitlens",
+				"github.vscode-pull-request-github",
+				// ── Container / environment ───────────────────────────────
 				"ms-azuretools.vscode-docker",
 				"ms-vscode-remote.remote-containers",
-				"streetsidesoftware.code-spell-checker"
+				// ── Quality of life ───────────────────────────────────────
+				"streetsidesoftware.code-spell-checker",
+				"usernamehw.errorlens",
+				"wix.vscode-import-cost"
 			],
 			"settings": {
 				"editor.defaultFormatter": "biomejs.biome",
@@ -58,7 +82,10 @@
 				"vitest.enable": true,
 				"vitest.commandLine": "bun run test",
 				"playwright.reuseBrowser": false,
-				"playwright.showTrace": "on-failure"
+				"playwright.showTrace": "on-failure",
+				// Claude Code — use Max/Pro subscription model
+				"claudeCode.selectedModel": "claude-sonnet-4-5",
+				"terminal.integrated.defaultProfile.linux": "bash"
 			}
 		}
 	}
