@@ -152,3 +152,49 @@ See `.devcontainer/devcontainer.json` and `.devcontainer/post-create.sh`.
 @.claude/skills/detector-authoring/SKILL.md
 @.claude/skills/activity-catalog/SKILL.md
 @.claude/skills/svelte-panel/SKILL.md
+
+## Supply Chain Security
+
+### pnpm Minimum Release Age (mandatory — configured in pnpm-workspace.yaml)
+All package installs enforce a minimum release age to protect against zero-day supply chain
+attacks (e.g. TanStack/Mini Shai-Hulud worm, May 2026 — 42 packages compromised in 6 minutes).
+
+```yaml
+# pnpm-workspace.yaml — this block MUST exist
+pnpm:
+  minimumReleaseAge: 10080   # 7 days in minutes
+  minimumReleaseAgeExclude:  # emergency security patches only — document reason in PR
+    []
+```
+
+**Never remove or reduce `minimumReleaseAge` without explicit user approval.**
+If a legitimate dependency install is blocked, add it to `minimumReleaseAgeExclude` with
+a comment explaining why, and remove the exclusion once the package ages out.
+
+### Dependency Rules
+- **Pin all dependencies to exact versions** in `package.json` — no `^` or `~` ranges.
+  Use `pnpm add --save-exact <pkg>` for every install.
+- **Verify lockfile integrity** before every `pnpm install`: `pnpm install --frozen-lockfile`
+- **No exotic subdependencies** — pnpm 11 blocks these by default; do not override.
+- **Never install a package published less than 7 days ago** without explicit user approval
+  and a documented reason in the PR.
+
+### Indicators of Compromise (IoCs) — check if any install behaves unexpectedly
+- `router_init.js` present anywhere in `node_modules/`
+- `@tanstack/setup` in any `optionalDependencies`
+- Unexpected `codeql_analysis.yml` files in `.github/workflows/`
+- Network traffic to `getsession.org` domains during build
+
+If any IoC is found: stop immediately, do not run further installs, alert the user.
+
+### New Dependency Checklist
+Before adding any new dependency, confirm:
+- [ ] Package is older than 7 days (enforced by pnpm, but verify manually for critical deps)
+- [ ] Publisher is the expected maintainer (check npm registry, not just package name)
+- [ ] No suspicious `optionalDependencies` pointing to GitHub commit hashes
+- [ ] Package has meaningful download history (not newly created)
+- [ ] Confirm with user before adding any package not already in the approved stack
+
+### Approved Stack (no new packages without user approval)
+WXT, Svelte 5, TypeScript, Tailwind CSS, Dexie, Vitest, Playwright, Biome, pnpm.
+Type packages (`@types/*`) are permitted without approval.
