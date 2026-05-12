@@ -30,7 +30,7 @@ idle/
 - **Vitest** — unit tests
 - **Playwright** — E2E (recorded fixtures in CI; live behind `E2E_LIVE=true`)
 - **Biome** — lint + format (sole tool; no ESLint, no Prettier)
-- **Bun** — package manager (confirm WXT support at scaffold; fall back to pnpm)
+- **pnpm** — package manager (Bun was incompatible with WXT scaffold; pnpm is the confirmed runtime for this project)
 
 DO NOT ADD: React, Next.js, analytics SDK, auth provider, backend, extra state libs.
 
@@ -73,7 +73,7 @@ DO NOT ADD: React, Next.js, analytics SDK, auth provider, backend, extra state l
 
 ### Formatting & lint
 - Biome owns all JS/TS/JSON formatting. Do not add Prettier or ESLint configs.
-- Run `bun run lint` before marking any task complete.
+- Run `pnpm lint` before marking any task complete.
 
 ## Key Interfaces (do not change signatures without updating all implementors)
 

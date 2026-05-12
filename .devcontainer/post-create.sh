@@ -1,19 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Detecting package manager..."
-if bun --version &>/dev/null; then
-  echo "    Bun $(bun --version) available."
-  # Only run install if workspace packages exist (post-scaffold)
-  if [ -f "package.json" ]; then
-    bun install
-  else
-    echo "    No package.json yet — skipping install (run after scaffold)."
-  fi
-else
-  echo "    Bun unavailable — falling back to pnpm"
-  pnpm install
-fi
+echo "==> Installing dependencies..."
+pnpm install
 
 echo "==> Installing Playwright headless Chromium shell..."
 if command -v bunx &>/dev/null; then
