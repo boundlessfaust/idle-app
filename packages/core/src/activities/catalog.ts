@@ -1,4 +1,4 @@
-// packages/core/activities/catalog.ts
+// packages/core/src/activities/catalog.ts
 // Hand-curated. DO NOT modify copy with an LLM.
 // All 36 activities authored by human. See activity-catalog SKILL.md for rules.
 
@@ -17,7 +17,6 @@ export interface Activity {
 }
 
 export const catalog: Activity[] = [
-
   // ── PhysicalReset (12) ────────────────────────────────────────────────────
 
   {
@@ -44,7 +43,7 @@ export const catalog: Activity[] = [
     category: 'PhysicalReset',
     waitBands: ['short'],
     title: 'Unclench your jaw',
-    body: "Let your tongue drop from the roof of your mouth. Soften the muscles around your eyes.",
+    body: 'Let your tongue drop from the roof of your mouth. Soften the muscles around your eyes.',
     durationHintSec: 10,
     requiresInput: false,
   },
@@ -267,7 +266,7 @@ export const catalog: Activity[] = [
     category: 'WriteOnly',
     waitBands: ['medium-long', 'long'],
     title: 'Log a question for later',
-    body: "Something to look up but not now. Park it.",
+    body: 'Something to look up but not now. Park it.',
     durationHintSec: 30,
     requiresInput: false,
   },
