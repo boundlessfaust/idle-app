@@ -1,0 +1,22 @@
+{
+  "name": "@idle/core",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    "./detection/*": "./src/detection/*.ts",
+    "./activities/*": "./src/activities/*.ts",
+    "./settings/*": "./src/settings/*.ts",
+    "./research/*": "./src/research/*.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.3"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "idle",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @idle/browser-extension run dev",
+    "build": "pnpm --filter @idle/browser-extension run build",
+    "test": "pnpm --filter @idle/core run test",
+    "test:e2e": "pnpm --filter @idle/browser-extension run test:e2e",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "pnpm -r run typecheck"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "spawn-sync"]
+  }
+}
