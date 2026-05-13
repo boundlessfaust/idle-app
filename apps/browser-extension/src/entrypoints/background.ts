@@ -1,48 +1,114 @@
 import type { WaitEvent } from '@idle/core/detection/types';
 import { checkHotkeyConflict } from '../lib/detection/fallback';
+import { getSettings } from '../lib/store/storage';
 
 interface ExtensionMessage {
   type: string;
   event?: WaitEvent;
 }
 
-export default defineBackground(() => {
-  // Track manual hotkey toggle state (background-SW-scoped)
-  let waitActive = false;
+// Singleton active-wait state: which tab is currently waiting
+interface ActiveWait {
+  tabId: number;
+  hostname: string;
+  startedAt: number;
+}
 
-  // Check for shortcut conflict immediately on SW startup
+let activeWait: ActiveWait | null = null;
+
+export default defineBackground(() => {
+  // Check for shortcut conflict on SW startup
   checkHotkeyConflict();
 
   // Manual hotkey: Ctrl/Cmd+Shift+L toggles wait_start / wait_end
+  let hotkeyActive = false;
   chrome.commands.onCommand.addListener((command) => {
     if (command !== 'toggle-wait') return;
 
-    const event: WaitEvent = waitActive
+    const event: WaitEvent = hotkeyActive
       ? { type: 'wait_end', at: Date.now() }
       : { type: 'wait_start', at: Date.now() };
-    waitActive = !waitActive;
+    hotkeyActive = !hotkeyActive;
 
     console.log(`[Idle] ${event.type} (hotkey)`, event);
-    broadcastToContentScripts({ type: 'WAIT_EVENT', event });
+    // Forward to all content script tabs (hotkey doesn't have a sender tab)
+    broadcastPanelEvent({ type: 'PANEL_EVENT', event });
   });
 
-  // Receive wait events forwarded from content-script providers
-  chrome.runtime.onMessage.addListener((msg: ExtensionMessage, sender) => {
-    if (msg.type === 'WAIT_EVENT' && msg.event) {
-      const tabId = (sender.tab?.id ?? 'unknown').toString();
-      console.log(`[Idle] ${msg.event.type} (tab:${tabId})`, msg.event);
-      // Phase 4: check muteUntil from Dexie before forwarding to panel UI
-    }
-  });
+  // Receive WAIT_EVENT from content-script providers; forward to panel after mute check
+  chrome.runtime.onMessage.addListener(
+    (msg: ExtensionMessage, sender, sendResponse: (r: unknown) => void) => {
+      if (msg.type !== 'WAIT_EVENT' || !msg.event) return;
+
+      const tabId = sender.tab?.id;
+      const url = sender.tab?.url ?? '';
+      const hostname = (() => {
+        try {
+          return new URL(url).hostname;
+        } catch {
+          return '';
+        }
+      })();
+
+      console.log(`[Idle] ${msg.event.type} (tab:${tabId ?? 'unknown'}, ${hostname})`, msg.event);
+
+      handleWaitEvent(msg.event, tabId, hostname).catch((err: unknown) => {
+        console.error('[Idle] Error handling wait event:', err);
+      });
+
+      // Return false — we handle asynchronously but don't use sendResponse
+      sendResponse(undefined);
+      return false;
+    },
+  );
 });
 
-function broadcastToContentScripts(msg: ExtensionMessage): void {
-  // Phase 4: targeted broadcast to active-wait tabs; for now broadcast all
+async function handleWaitEvent(
+  event: WaitEvent,
+  tabId: number | undefined,
+  hostname: string,
+): Promise<void> {
+  if (event.type === 'wait_start') {
+    // Check mute before forwarding
+    const settings = await getSettings();
+    if (Date.now() < settings.muteUntil) {
+      console.log('[Idle] wait_start suppressed — muted until', new Date(settings.muteUntil));
+      return;
+    }
+
+    // Multi-tab singleton: if another tab has an active wait on same hostname, dismiss it
+    if (activeWait && activeWait.hostname === hostname && activeWait.tabId !== tabId) {
+      chrome.tabs
+        .sendMessage(activeWait.tabId, {
+          type: 'PANEL_EVENT',
+          event: { type: 'wait_end', at: Date.now() },
+        })
+        .catch(() => {
+          // Tab may have closed — expected
+        });
+    }
+
+    if (tabId !== undefined) {
+      activeWait = { tabId, hostname, startedAt: event.at };
+    }
+  } else if (event.type === 'wait_end') {
+    if (activeWait?.tabId === tabId) {
+      activeWait = null;
+    }
+  }
+
+  if (tabId === undefined) return;
+  chrome.tabs.sendMessage(tabId, { type: 'PANEL_EVENT', event }).catch((err: unknown) => {
+    console.error(`[Idle] Could not send PANEL_EVENT to tab ${tabId}:`, err);
+  });
+}
+
+function broadcastPanelEvent(msg: ExtensionMessage): void {
   chrome.tabs.query({}, (tabs) => {
     for (const tab of tabs) {
       if (tab.id != null) {
         chrome.tabs.sendMessage(tab.id, msg).catch(() => {
-          // Expected for tabs without the content script injected
+          // Expected for tabs without the content script
         });
       }
     }

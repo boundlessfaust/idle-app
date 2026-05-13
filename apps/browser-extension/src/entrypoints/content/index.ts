@@ -1,4 +1,34 @@
 import type { WaitEvent } from '@idle/core/detection/types';
+import { mount, unmount } from 'svelte';
+import Panel from './ui/Panel.svelte';
+
+// Typed handle for calling Panel's exported methods
+interface PanelHandle {
+  handleWaitStart: (at: number, prompt?: string) => void;
+  handleWaitEnd: () => void;
+}
+
+interface ExtensionMessage {
+  type: string;
+  event?: WaitEvent;
+}
+
+// Pending events buffered until Panel mounts
+const pendingEvents: ExtensionMessage[] = [];
+let panelHandle: PanelHandle | null = null;
+
+function dispatchToPanel(msg: ExtensionMessage) {
+  if (!msg.event) return;
+  if (panelHandle === null) {
+    pendingEvents.push(msg);
+    return;
+  }
+  if (msg.event.type === 'wait_start') {
+    panelHandle.handleWaitStart(msg.event.at, msg.event.promptText);
+  } else if (msg.event.type === 'wait_end') {
+    panelHandle.handleWaitEnd();
+  }
+}
 
 export default defineContentScript({
   matches: [
@@ -7,20 +37,50 @@ export default defineContentScript({
     '*://gemini.google.com/*',
     '*://perplexity.ai/*',
   ],
+  cssInjectionMode: 'ui',
 
-  async main() {
-    if (!__TEST_MODE__) return;
+  async main(ctx) {
+    // ── Inject Panel into shadow DOM ─────────────────────────────────────────
+    const ui = await createShadowRootUi(ctx, {
+      name: 'idle-panel',
+      position: 'inline',
+      anchor: 'body',
+      onMount(container) {
+        const app = mount(Panel, { target: container });
+        panelHandle = app as unknown as PanelHandle;
+        // Drain any events that arrived before mount
+        for (const msg of pendingEvents.splice(0)) {
+          dispatchToPanel(msg);
+        }
+        return app;
+      },
+      onRemove(app) {
+        if (app) unmount(app as Parameters<typeof unmount>[0]);
+        panelHandle = null;
+      },
+    });
+    ui.mount();
 
-    const { testModeProvider } = await import('./detectors/test-mode');
+    // ── Listen for PANEL_EVENT from background SW ────────────────────────────
+    chrome.runtime.onMessage.addListener((msg: ExtensionMessage) => {
+      if (msg.type === 'PANEL_EVENT') {
+        dispatchToPanel(msg);
+      }
+    });
 
-    const dispatch = (event: WaitEvent): void => {
-      chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-        console.error('[Idle] Failed to send wait event to background SW:', err);
-      });
-    };
+    // ── Start test-mode provider if TEST_MODE=true ────────────────────────────
+    if (__TEST_MODE__) {
+      const { testModeProvider } = await import('./detectors/test-mode');
 
-    const handle = testModeProvider.start(dispatch);
-    console.log('[Idle] Test-mode provider started. contextKey:', testModeProvider.contextKey);
-    console.log('[Idle] wait_start fires in ~5s, wait_end fires in ~20s. state:', handle.state);
+      const dispatch = (event: WaitEvent): void => {
+        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
+          console.error('[Idle] Failed to send wait event to background SW:', err);
+        });
+      };
+
+      const handle = testModeProvider.start(dispatch);
+      console.log('[Idle] Test-mode provider started. contextKey:', testModeProvider.contextKey);
+      console.log('[Idle] wait_start at T+5s, wait_end at T+20s. state:', handle.state);
+    }
   },
 });

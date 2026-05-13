@@ -12,7 +12,8 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "@idle/core": "workspace:*"
+    "@idle/core": "workspace:*",
+    "dexie": "4.4.2"
   },
   "devDependencies": {
     "@wxt-dev/module-svelte": "^2.0.5",
