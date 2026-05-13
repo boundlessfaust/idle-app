@@ -68,7 +68,9 @@ export default defineContentScript({
       }
     });
 
-    // ── Start test-mode provider if TEST_MODE=true ────────────────────────────
+    // ── Test-mode provider: only starts on explicit TRIGGER_TEST_MODE message ──
+    // Never auto-starts on page load — requires the toggle-wait hotkey (or popup
+    // button) to send TRIGGER_TEST_MODE from the background SW.
     if (__TEST_MODE__) {
       const { testModeProvider } = await import('./detectors/test-mode');
 
@@ -78,9 +80,15 @@ export default defineContentScript({
         });
       };
 
-      const handle = testModeProvider.start(dispatch);
-      console.log('[Idle] Test-mode provider started. contextKey:', testModeProvider.contextKey);
-      console.log('[Idle] wait_start at T+5s, wait_end at T+20s. state:', handle.state);
+      let activeHandle: { stop(): void } | null = null;
+
+      chrome.runtime.onMessage.addListener((msg: ExtensionMessage) => {
+        if (msg.type !== 'TRIGGER_TEST_MODE') return;
+        // Stop any in-progress sequence before starting a fresh one
+        activeHandle?.stop();
+        activeHandle = testModeProvider.start(dispatch);
+        console.log('[Idle] Test-mode triggered. wait_start at T+5s, wait_end at T+20s.');
+      });
     }
   },
 });

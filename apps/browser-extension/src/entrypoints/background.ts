@@ -20,10 +20,18 @@ export default defineBackground(() => {
   // Check for shortcut conflict on SW startup
   checkHotkeyConflict();
 
-  // Manual hotkey: Ctrl/Cmd+Shift+L toggles wait_start / wait_end
+  // Manual hotkey: Ctrl/Cmd+Shift+L
+  // TEST_MODE builds: triggers the test sequence in the content script (5s delay → panel)
+  // Production builds: directly toggles wait_start / wait_end
   let hotkeyActive = false;
   chrome.commands.onCommand.addListener((command) => {
     if (command !== 'toggle-wait') return;
+
+    if (__TEST_MODE__) {
+      console.log('[Idle] toggle-wait (hotkey) → TRIGGER_TEST_MODE');
+      broadcastPanelEvent({ type: 'TRIGGER_TEST_MODE' });
+      return;
+    }
 
     const event: WaitEvent = hotkeyActive
       ? { type: 'wait_end', at: Date.now() }
@@ -31,7 +39,6 @@ export default defineBackground(() => {
     hotkeyActive = !hotkeyActive;
 
     console.log(`[Idle] ${event.type} (hotkey)`, event);
-    // Forward to all content script tabs (hotkey doesn't have a sender tab)
     broadcastPanelEvent({ type: 'PANEL_EVENT', event });
   });
 
