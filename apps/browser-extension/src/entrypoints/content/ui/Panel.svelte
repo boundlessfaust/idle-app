@@ -4,6 +4,12 @@ import type { Activity } from '@idle/core/activities/catalog';
 import { selectActivity } from '@idle/core/activities/selector';
 import type { WaitBand } from '@idle/core/detection/types';
 import { onMount } from 'svelte';
+
+// Incoming props
+interface PanelProps {
+  siteOffset?: { x: number; y: number };
+}
+const { siteOffset = { x: 0, y: 0 } }: PanelProps = $props();
 import {
   type Corner,
   addToRotationHistory,
@@ -67,15 +73,17 @@ let dragY = $state(0);
 function cornerToXY(c: Corner): { x: number; y: number } {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  const ox = siteOffset.x;
+  const oy = siteOffset.y; // negative = move up; applied to bottom corners only
   switch (c) {
     case 'top-left':
       return { x: MARGIN, y: MARGIN };
     case 'top-right':
       return { x: vw - PANEL_W - MARGIN, y: MARGIN };
     case 'bottom-left':
-      return { x: MARGIN, y: vh - PANEL_H - MARGIN };
+      return { x: MARGIN + ox, y: vh - PANEL_H - MARGIN + oy };
     case 'bottom-right':
-      return { x: vw - PANEL_W - MARGIN, y: vh - PANEL_H - MARGIN };
+      return { x: vw - PANEL_W - MARGIN + ox, y: vh - PANEL_H - MARGIN + oy };
   }
 }
 

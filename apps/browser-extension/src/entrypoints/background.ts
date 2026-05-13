@@ -1,5 +1,7 @@
 import type { WaitEvent } from '@idle/core/detection/types';
 import { checkHotkeyConflict } from '../lib/detection/fallback';
+import type { DetectorLogRecord } from '../lib/store/db';
+import { logDetectorFailure, pruneDetectorLogs } from '../lib/store/detectorLogs';
 import { getSettings } from '../lib/store/storage';
 
 interface ExtensionMessage {
@@ -16,9 +18,19 @@ interface ActiveWait {
 
 let activeWait: ActiveWait | null = null;
 
+interface LogFailureMessage {
+  type: 'LOG_DETECTOR_FAILURE';
+  entry: Omit<DetectorLogRecord, 'id'>;
+}
+
 export default defineBackground(() => {
   // Check for shortcut conflict on SW startup
   checkHotkeyConflict();
+
+  // Prune stale detector logs on each SW startup (best-effort)
+  pruneDetectorLogs().catch((err: unknown) => {
+    console.error('[Idle] Failed to prune detector logs:', err);
+  });
 
   // Manual hotkey: Ctrl/Cmd+Shift+L
   // TEST_MODE builds: triggers the test sequence in the content script (5s delay → panel)
@@ -40,6 +52,14 @@ export default defineBackground(() => {
 
     console.log(`[Idle] ${event.type} (hotkey)`, event);
     broadcastPanelEvent({ type: 'PANEL_EVENT', event });
+  });
+
+  // Write detector failure logs sent from content scripts (Dexie lives here, not in content bundle)
+  chrome.runtime.onMessage.addListener((msg: LogFailureMessage | ExtensionMessage) => {
+    if (msg.type !== 'LOG_DETECTOR_FAILURE') return;
+    logDetectorFailure(msg.entry).catch((err: unknown) => {
+      console.error('[Idle] Failed to write detector log:', err);
+    });
   });
 
   // Receive WAIT_EVENT from content-script providers; forward to panel after mute check
