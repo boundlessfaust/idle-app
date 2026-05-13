@@ -198,3 +198,23 @@ Before adding any new dependency, confirm:
 ### Approved Stack (no new packages without user approval)
 WXT, Svelte 5, TypeScript, Tailwind CSS, Dexie, Vitest, Playwright, Biome, pnpm.
 Type packages (`@types/*`) are permitted without approval.
+
+## Agent Behavior Rules
+
+### Prevent mid-task stalls
+- Complete one file edit fully before moving to the next. Never leave a file partially edited.
+- If a file exceeds 200 lines, split the edit into clearly named sections and complete each
+  before moving on. Do not stop between sections.
+- When editing a Svelte component, write the complete file in one Edit operation.
+  Never break a single component across multiple Edit calls.
+
+### Scope discipline
+- Each phase prompt defines exactly what to build. Do not add, refactor, or "improve"
+  anything outside the defined deliverables for that phase.
+- If something outside scope looks broken, note it in a comment: `// TODO Phase N: fix X`
+  and continue. Do not fix it now.
+
+### Context hygiene
+- At the start of each phase: read CLAUDE.md and the relevant SKILL.md only.
+  Do not re-read files from previous phases unless explicitly needed.
+- If context feels long, run `git status` to reorient — do not re-read source files.
