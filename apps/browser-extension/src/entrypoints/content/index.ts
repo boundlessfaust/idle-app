@@ -6,6 +6,7 @@ import Panel from './ui/Panel.svelte';
 // Applied to default corner positions only — user-saved corners are never overridden.
 const SITE_OFFSETS: Record<string, { x: number; y: number }> = {
   'claude.ai': { x: 0, y: -80 },
+  'chatgpt.com': { x: 0, y: -80 },
 };
 
 // Typed handle for calling Panel's exported methods
@@ -91,6 +92,21 @@ export default defineContentScript({
       claudeProvider.start(dispatch);
       realProviderActive = true;
       console.log('[Idle] claude.ai provider started');
+    }
+
+    // ── Start chatgpt.com provider ────────────────────────────────────────────
+    if (hostname === 'chatgpt.com') {
+      const { provider: chatgptProvider } = await import('./detectors/chatgpt');
+
+      const dispatch = (event: WaitEvent): void => {
+        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
+          console.error('[Idle] Failed to send wait event:', err);
+        });
+      };
+
+      chatgptProvider.start(dispatch);
+      realProviderActive = true;
+      console.log('[Idle] chatgpt.com provider started');
     }
 
     // ── Test-mode provider: only on explicit TRIGGER_TEST_MODE message ────────
