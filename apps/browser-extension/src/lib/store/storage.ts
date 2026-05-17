@@ -15,6 +15,9 @@ export interface Settings {
   windowN: number;
   badgeStyle: 'none' | 'active' | 'mute';
   disabledCategories: string[];
+  siteEnabled: Record<string, boolean>; // hostname → enabled; default true
+  logRetentionDays: number; // 1 | 3 | 7 | 30; default 7
+  logEntryCap: number; // per-detector cap; default 500
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -28,6 +31,9 @@ const DEFAULT_SETTINGS: Settings = {
   windowN: 30,
   badgeStyle: 'none',
   disabledCategories: [],
+  siteEnabled: { 'claude.ai': true, 'chatgpt.com': true },
+  logRetentionDays: 7,
+  logEntryCap: 500,
 };
 
 function storageGet<T>(keys: string[]): Promise<Record<string, T>> {

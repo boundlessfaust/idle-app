@@ -86,6 +86,10 @@ async function clearNote() {
 function openShortcuts() {
   chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
 }
+
+function openOptions() {
+  chrome.runtime.openOptionsPage();
+}
 </script>
 
 <div class="popup">
@@ -151,6 +155,10 @@ function openShortcuts() {
       <p class="note-text">{pinnedNote}</p>
     </div>
   {/if}
+
+  <div class="footer">
+    <button class="settings-link" onclick={openOptions} aria-label="Open settings">Settings</button>
+  </div>
 </div>
 
 <style>
@@ -348,5 +356,34 @@ function openShortcuts() {
     overflow-y: auto;
     white-space: pre-wrap;
     word-break: break-word;
+  }
+
+  .footer {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .settings-link {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 4px 8px;
+    min-height: 44px;
+    min-width: 44px;
+    border-radius: 3px;
+  }
+
+  .settings-link:hover {
+    color: #555;
+    background: #f0f0ee;
+  }
+
+  .settings-link:focus-visible {
+    outline: 2px solid #5b9e9a;
+    outline-offset: 2px;
   }
 </style>

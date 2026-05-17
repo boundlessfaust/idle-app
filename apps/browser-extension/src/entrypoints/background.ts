@@ -102,6 +102,10 @@ async function handleWaitEvent(
       console.log('[Idle] wait_start suppressed — Idle is disabled');
       return;
     }
+    if (settings.siteEnabled && settings.siteEnabled[hostname] === false) {
+      console.log(`[Idle] wait_start suppressed — ${hostname} is disabled`);
+      return;
+    }
     if (Date.now() < settings.muteUntil) {
       console.log('[Idle] wait_start suppressed — muted until', new Date(settings.muteUntil));
       return;
