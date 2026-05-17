@@ -25,9 +25,21 @@ const DETECTORS = [
     providerVersion: '1.0.0',
     lastVerified: '2026-05-14',
   },
+  {
+    contextKey: 'web:gemini.google.com',
+    site: 'gemini.google.com',
+    providerVersion: '1.0.0',
+    lastVerified: '2026-05-17',
+  },
+  {
+    contextKey: 'web:perplexity.ai',
+    site: 'perplexity.ai',
+    providerVersion: '1.0.0',
+    lastVerified: '2026-05-17',
+  },
 ];
 
-const KNOWN_SITES = ['claude.ai', 'chatgpt.com'];
+const KNOWN_SITES = ['claude.ai', 'chatgpt.com', 'gemini.google.com', 'perplexity.ai'];
 
 const ALL_CATEGORIES: ActivityCategory[] = [
   'PhysicalReset',

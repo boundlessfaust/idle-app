@@ -7,6 +7,9 @@ import Panel from './ui/Panel.svelte';
 const SITE_OFFSETS: Record<string, { x: number; y: number }> = {
   'claude.ai': { x: 0, y: -80 },
   'chatgpt.com': { x: 0, y: -80 },
+  'gemini.google.com': { x: 0, y: -80 },
+  'perplexity.ai': { x: 0, y: -80 },
+  'www.perplexity.ai': { x: 0, y: -80 },
 };
 
 // Typed handle for calling Panel's exported methods
@@ -43,6 +46,7 @@ export default defineContentScript({
     '*://chatgpt.com/*',
     '*://gemini.google.com/*',
     '*://perplexity.ai/*',
+    '*://www.perplexity.ai/*',
   ],
   cssInjectionMode: 'ui',
 
@@ -107,6 +111,36 @@ export default defineContentScript({
       chatgptProvider.start(dispatch);
       realProviderActive = true;
       console.log('[Idle] chatgpt.com provider started');
+    }
+
+    // ── Start gemini.google.com provider ──────────────────────────────────────
+    if (hostname === 'gemini.google.com') {
+      const { provider: geminiProvider } = await import('./detectors/gemini');
+
+      const dispatch = (event: WaitEvent): void => {
+        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
+          console.error('[Idle] Failed to send wait event:', err);
+        });
+      };
+
+      geminiProvider.start(dispatch);
+      realProviderActive = true;
+      console.log('[Idle] gemini.google.com provider started');
+    }
+
+    // ── Start perplexity.ai provider ──────────────────────────────────────────
+    if (hostname === 'perplexity.ai' || hostname === 'www.perplexity.ai') {
+      const { provider: perplexityProvider } = await import('./detectors/perplexity');
+
+      const dispatch = (event: WaitEvent): void => {
+        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
+          console.error('[Idle] Failed to send wait event:', err);
+        });
+      };
+
+      perplexityProvider.start(dispatch);
+      realProviderActive = true;
+      console.log('[Idle] perplexity.ai provider started');
     }
 
     // ── Test-mode provider: only on explicit TRIGGER_TEST_MODE message ────────
