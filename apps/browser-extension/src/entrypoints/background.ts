@@ -96,8 +96,12 @@ async function handleWaitEvent(
   hostname: string,
 ): Promise<void> {
   if (event.type === 'wait_start') {
-    // Check mute before forwarding
+    // Check enabled + mute before forwarding
     const settings = await getSettings();
+    if (!settings.enabled) {
+      console.log('[Idle] wait_start suppressed — Idle is disabled');
+      return;
+    }
     if (Date.now() < settings.muteUntil) {
       console.log('[Idle] wait_start suppressed — muted until', new Date(settings.muteUntil));
       return;

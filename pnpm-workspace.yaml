@@ -1,6 +1,11 @@
 pnpm:
-  minimumReleaseAge: 10080  # 7 days in minutes
+  minimumReleaseAge: 10080 # 7 days in minutes
 
 packages:
   - "packages/*"
   - "apps/*"
+
+allowBuilds:
+  '@biomejs/biome': true
+  esbuild: true
+  spawn-sync: true
