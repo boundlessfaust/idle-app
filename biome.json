@@ -35,6 +35,8 @@
       "**/.output/**",
       "**/.wxt/**",
       "**/coverage/**",
+      "**/test-results/**",
+      "**/playwright-report/**",
       "**/.pnpm-store/**",
       ".devcontainer/**",
       "pnpm-lock.yaml"

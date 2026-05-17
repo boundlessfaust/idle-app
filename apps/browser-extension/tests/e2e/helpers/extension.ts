@@ -109,7 +109,8 @@ type WorkerFixtures = {
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
   extContext: [
-    async (_: object, use) => {
+    // biome-ignore lint/correctness/noEmptyPattern: Playwright fixture API requires object destructuring
+    async ({}, use) => {
       // Extensions require the full Chromium binary, not the headless shell.
       // headless: false + --headless=new runs full Chrome in headless mode
       // without needing an X11 display, with full extension support.
