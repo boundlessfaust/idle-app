@@ -6,8 +6,8 @@ bun.lockb
 # Keep bun.lock (text lockfile) if using Bun ≥1.1 — delete line below if so
 # bun.lock
 
-# ── pnpm (fallback) ───────────────────────────────────────────────
-pnpm-lock.yaml
+# ── pnpm ──────────────────────────────────────────────────────────
+# pnpm-lock.yaml is intentionally committed — CI requires it
 .pnpm-store/
 
 # ── WXT build output ─────────────────────────────────────────────
