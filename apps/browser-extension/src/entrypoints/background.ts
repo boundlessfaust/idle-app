@@ -57,7 +57,7 @@ export default defineBackground(() => {
   // Write detector failure logs sent from content scripts (Dexie lives here, not in content bundle)
   chrome.runtime.onMessage.addListener((msg: LogFailureMessage | ExtensionMessage) => {
     if (msg.type !== 'LOG_DETECTOR_FAILURE') return;
-    logDetectorFailure(msg.entry).catch((err: unknown) => {
+    logDetectorFailure((msg as LogFailureMessage).entry).catch((err: unknown) => {
       console.error('[Idle] Failed to write detector log:', err);
     });
   });

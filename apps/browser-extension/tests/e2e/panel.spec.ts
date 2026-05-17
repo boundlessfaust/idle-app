@@ -11,11 +11,6 @@ import {
   waitForPanelVisible,
 } from './helpers/extension';
 
-// Convenience: locate the panel div inside the shadow root.
-// Playwright chains through the open shadow root automatically.
-const panel = (p: Parameters<typeof p.locator>[0]) =>
-  (p as import('@playwright/test').Page).locator('idle-panel').locator('.idle-panel');
-
 for (const site of SITES) {
   test.describe(`${site.key} — panel`, () => {
     test.beforeEach(async ({ extContext, page }) => {
