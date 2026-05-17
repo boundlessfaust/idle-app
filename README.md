@@ -65,11 +65,15 @@ idle/
 
 ## Development
 
-Requires VS Code with the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
+Requires an IDE or editor with [Dev Containers](https://containers.dev) support — VS Code +
+[Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers),
+JetBrains Gateway, Cursor, or the [`devcontainer` CLI](https://github.com/devcontainers/cli).
 
 ```bash
 # 1. Open in dev container
-#    VS Code → "Dev Containers: Open Folder in Container..."
+#    VS Code:           "Dev Containers: Open Folder in Container..."
+#    JetBrains Gateway: open folder → select "Dev Container"
+#    CLI:               devcontainer up --workspace-folder .
 
 # 2. Start dev server (runs inside container, HMR enabled)
 pnpm dev
@@ -78,6 +82,9 @@ pnpm dev
 #    chrome://extensions → Load unpacked
 #    → apps/browser-extension/.output/chrome-mv3-dev/
 ```
+
+VS Code users: `.vscode/extensions.json` recommends extensions for Biome, Svelte, Tailwind,
+Vitest, and Playwright.
 
 ## Testing
 
