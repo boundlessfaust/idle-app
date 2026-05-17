@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Perplexity — Idle E2E fixture</title>
+  </head>
+  <body data-idle-site="perplexity.ai">
+    <div id="__next">
+      <main style="padding: 40px; font-family: sans-serif">
+        <h1>Perplexity fixture page</h1>
+        <p>Idle E2E fixture. The detector watches document.body for:</p>
+        <ul>
+          <li><code>[class*="LoadingDots"]</code></li>
+          <li><code>button[aria-label="Stop generating" i]</code></li>
+        </ul>
+        <div id="answer-container"></div>
+      </main>
+    </div>
+  </body>
+</html>

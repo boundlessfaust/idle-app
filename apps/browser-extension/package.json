@@ -2,20 +2,23 @@
   "name": "@idle/browser-extension",
   "description": "Idle — AI wait time micro-recovery activities",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",
     "zip": "wxt zip",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "test:e2e": "playwright test",
+    "test:e2e:record": "E2E_LIVE=true playwright test"
   },
   "dependencies": {
     "@idle/core": "workspace:*",
     "dexie": "4.4.2"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.1",
     "@wxt-dev/module-svelte": "^2.0.5",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.4",

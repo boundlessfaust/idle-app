@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gemini — Idle E2E fixture</title>
+  </head>
+  <body data-idle-site="gemini.google.com">
+    <c-wiz></c-wiz>
+    <div class="chat-container" style="padding: 40px; font-family: sans-serif">
+      <h1>Gemini fixture page</h1>
+      <p>Idle E2E fixture. The detector watches document.body for:</p>
+      <ul>
+        <li><code>model-response[class*="loading"]</code></li>
+        <li><code>button[aria-label="Stop generating" i]</code></li>
+      </ul>
+      <div id="response-container"></div>
+    </div>
+  </body>
+</html>

@@ -47,11 +47,20 @@ export default defineContentScript({
     '*://gemini.google.com/*',
     '*://perplexity.ai/*',
     '*://www.perplexity.ai/*',
+    // E2E fixture tests serve HTML at localhost; data-idle-site on <body> tells
+    // us which provider to start. Safe to leave in production — no AI site DOM
+    // will be found on localhost so the provider exits silently.
+    '*://localhost/*',
+    '*://127.0.0.1/*',
   ],
   cssInjectionMode: 'ui',
 
   async main(ctx) {
-    const hostname = window.location.hostname;
+    const rawHostname = window.location.hostname;
+    // When running E2E fixture tests the page is served from localhost.
+    // The fixture sets <body data-idle-site="claude.ai"> to identify the target site.
+    const isLocalhost = rawHostname === 'localhost' || rawHostname === '127.0.0.1';
+    const hostname = isLocalhost ? (document.body.dataset.idleSite ?? rawHostname) : rawHostname;
     const siteOffset = SITE_OFFSETS[hostname] ?? { x: 0, y: 0 };
     let realProviderActive = false;
 

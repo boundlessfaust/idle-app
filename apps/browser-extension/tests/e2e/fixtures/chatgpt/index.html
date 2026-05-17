@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ChatGPT — Idle E2E fixture</title>
+  </head>
+  <body data-idle-site="chatgpt.com">
+    <div id="__next">
+      <main role="main" style="padding: 40px; font-family: sans-serif">
+        <h1>ChatGPT fixture page</h1>
+        <p>Idle E2E fixture. The detector watches document.body for:</p>
+        <ul>
+          <li>
+            <code
+              >[data-message-author-role="assistant"][data-status="streaming"]</code
+            >
+          </li>
+          <li><code>button[data-testid="stop-button"]</code></li>
+        </ul>
+        <div id="chat-container"></div>
+      </main>
+    </div>
+  </body>
+</html>

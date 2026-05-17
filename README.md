@@ -23,20 +23,44 @@ Activities draw from four categories grounded in published research:
 
 ## Status
 
-🚧 **Active development — v1 not yet released.**
+Feature-complete for v1. All 10 build phases shipped:
+
+| Phase | Deliverable |
+|---|---|
+| 1 | Monorepo scaffold (WXT, Svelte 5, TypeScript, Tailwind, Biome, Vitest) |
+| 2 | Detection contracts, manual hotkey, test-mode provider |
+| 3 | Activity catalog (36 hand-curated activities) + selector logic |
+| 4 | Side panel UI (shadow DOM injection, drag, mute, skip) |
+| 5 | claude.ai wait provider |
+| 6 | chatgpt.com wait provider |
+| 7 | Popup (master toggle, mute, detection mode, pinned note) |
+| 8 | Options page (per-site toggles, advanced settings) |
+| 9 | Gemini and Perplexity wait providers |
+| 10 | Playwright E2E test suite (32 tests, fixture-based, CI-ready) |
 
 ## Stack
 
 - [WXT](https://wxt.dev) — MV3 extension scaffolding
 - Svelte 5 (rune mode) + TypeScript (strict)
 - Tailwind CSS · Dexie (IndexedDB) · Biome · Vitest · Playwright
+- pnpm workspaces
 
 ## Monorepo layout
 
 ```
 idle/
-├── packages/core/          # Platform-agnostic logic (zero browser globals)
-└── apps/browser-extension/ # WXT + Svelte 5 Chromium extension
+├── packages/core/                  # Platform-agnostic (zero browser globals)
+│   ├── detection/                  # WaitProvider interface + registry
+│   ├── activities/                 # 36-item catalog + selector logic
+│   ├── settings/                   # Schema + defaults
+│   └── research/                   # Citation keys
+└── apps/browser-extension/         # WXT + Svelte 5 Chromium extension
+    ├── src/entrypoints/
+    │   ├── background.ts           # Service worker
+    │   ├── content/                # Content script + wait providers
+    │   ├── popup/                  # Popup UI
+    │   └── options/                # Options page
+    └── tests/e2e/                  # Playwright fixtures + specs
 ```
 
 ## Development
@@ -47,19 +71,33 @@ Requires VS Code with the [Dev Containers](https://marketplace.visualstudio.com/
 # 1. Open in dev container
 #    VS Code → "Dev Containers: Open Folder in Container..."
 
-# 2. Start dev server (runs inside container)
-bun run dev
+# 2. Start dev server (runs inside container, HMR enabled)
+pnpm dev
 
 # 3. Load extension in host Chrome
 #    chrome://extensions → Load unpacked
 #    → apps/browser-extension/.output/chrome-mv3-dev/
-
-# 4. Run tests
-bun run test        # unit (Vitest)
-bun run test:e2e    # E2E fixtures (Playwright)
 ```
 
-> **Scaffolding note:** Use `npx wxt@latest init` (not `bunx`) — see [WXT issue #707](https://github.com/wxt-dev/wxt/issues/707).
+## Testing
+
+```bash
+# Unit tests (Vitest — packages/core)
+pnpm test
+
+# E2E tests (Playwright — fixture-based, no live network)
+pnpm build && pnpm test:e2e
+
+# E2E against live sites (requires signed-in browser session)
+pnpm build && E2E_LIVE=true pnpm test:e2e
+
+# Lint
+pnpm lint
+```
+
+The E2E suite covers 32 scenarios across all four supported sites: panel debounce timing,
+wait-end dismissal, Skip cycling, Mute controls, keyboard dismiss, master toggle, and
+shadow DOM isolation.
 
 ## Privacy
 
@@ -68,7 +106,7 @@ Prompt capture is opt-in and off by default; captured text never leaves the brow
 
 ## Roadmap
 
-- **v1** — Browser extension (Chromium)
+- **v1** — Browser extension (Chromium) ✓
 - **v2** — IDE extension (VS Code / Cursor)
 - **v3** — Desktop / OS service
 
