@@ -6,6 +6,8 @@ export default defineConfig({
   modules: ['@wxt-dev/module-svelte'],
 
   manifest: {
+    name: 'Idle — AI Wait Recovery',
+    short_name: 'Idle',
     permissions: ['storage', 'tabs', 'commands', 'scripting'],
     commands: {
       'toggle-wait': {
