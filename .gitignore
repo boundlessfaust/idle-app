@@ -61,5 +61,9 @@ Thumbs.db
 # .vscode/ intentionally NOT ignored — .vscode/settings.json is committed
 # Add personal VS Code files to ~/.gitignore_global instead
 
+# ── Docs (generated from SVGs — do not commit PNGs) ─────────────
+docs/**/*.png
+docs/*.png
+
 # ── Devcontainer volumes (host-side bind mount artifacts) ────────
 # Nothing to exclude — devcontainer runs in Docker, no host artifacts
