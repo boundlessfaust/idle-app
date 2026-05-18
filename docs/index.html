@@ -1,205 +1,310 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Idle — Brain breaks for AI wait times</title>
-  <meta name="description" content="A browser extension that surfaces research-backed micro-recovery activities while AI responds. No telemetry. Everything stays local.">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: #28251d;
-      background: #f7f6f2;
-      line-height: 1.7;
-      padding: 3rem 1.25rem 4rem;
-    }
-    .container { max-width: 640px; margin: 0 auto; }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Idle — Brain breaks for AI wait times</title>
+        <meta
+            name="description"
+            content="A browser extension that surfaces research-backed micro-recovery activities while AI responds. No telemetry. Everything stays local."
+        />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                font-size: 16px;
+                -webkit-font-smoothing: antialiased;
+            }
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                color: #28251d;
+                background: #f7f6f2;
+                line-height: 1.7;
+                padding: 3rem 1.25rem 4rem;
+            }
+            .container {
+                max-width: 640px;
+                margin: 0 auto;
+            }
 
-    /* ── Header ── */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-    }
-    .logo {
-      display: block;
-      flex-shrink: 0;
-    }
-    .wordmark {
-      font-size: 1.6rem;
-      font-weight: 300;
-      letter-spacing: -0.02em;
-      color: #28251d;
-      line-height: 1;
-    }
+            /* ── Header ── */
+            .header {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 2.5rem;
+            }
+            .logo {
+                display: block;
+                flex-shrink: 0;
+            }
+            .wordmark {
+                font-size: 1.6rem;
+                font-weight: 300;
+                letter-spacing: -0.02em;
+                color: #28251d;
+                line-height: 1;
+            }
 
-    /* ── Hero ── */
-    .tagline {
-      font-size: 1.5rem;
-      font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
-      color: #28251d;
-      margin-bottom: 1rem;
-    }
-    .lead {
-      font-size: 1rem;
-      color: #3a3830;
-      max-width: 58ch;
-      margin-bottom: 2rem;
-    }
+            /* ── Hero ── */
+            .tagline {
+                font-size: 1.5rem;
+                font-weight: 600;
+                line-height: 1.3;
+                letter-spacing: -0.01em;
+                color: #28251d;
+                margin-bottom: 1rem;
+            }
+            .lead {
+                font-size: 1rem;
+                color: #3a3830;
+                max-width: 58ch;
+                margin-bottom: 2rem;
+            }
 
-    /* ── Install button ── */
-    .install-btn {
-      display: inline-block;
-      background: #01696f;
-      color: #fff;
-      text-decoration: none;
-      padding: 0.65rem 1.4rem;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 2.5rem;
-      transition: background 0.15s;
-    }
-    .install-btn:hover { background: #015a60; text-decoration: none; }
+            /* ── Install button ── */
+            .install-btn {
+                display: inline-block;
+                background: #01696f;
+                color: #fff;
+                text-decoration: none;
+                padding: 0.65rem 1.4rem;
+                border-radius: 6px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                margin-bottom: 2.5rem;
+                transition: background 0.15s;
+            }
+            .install-btn:hover {
+                background: #015a60;
+                text-decoration: none;
+            }
 
-    /* ── Divider ── */
-    .divider {
-      height: 1px;
-      background: #e5e2db;
-      margin: 2rem 0;
-    }
+            /* ── Divider ── */
+            .divider {
+                height: 1px;
+                background: #e5e2db;
+                margin: 2rem 0;
+            }
 
-    /* ── Activities ── */
-    h2 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #28251d;
-      margin-bottom: 0.75rem;
-    }
-    .activity-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 1rem;
-    }
-    .activity-list li {
-      font-size: 0.975rem;
-      color: #3a3830;
-      display: grid;
-      grid-template-columns: 10rem 1fr;
-      gap: 0.5rem;
-    }
-    .activity-list .cat {
-      font-weight: 500;
-      color: #28251d;
-    }
-    .activity-list .timing {
-      font-size: 0.85rem;
-      color: #7a7974;
-      font-weight: 400;
-    }
+            /* ── Activities ── */
+            h2 {
+                font-size: 1.05rem;
+                font-weight: 600;
+                color: #28251d;
+                margin-bottom: 0.75rem;
+            }
+            .activity-list {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+                margin-bottom: 1rem;
+            }
+            .activity-list li {
+                font-size: 0.975rem;
+                color: #3a3830;
+                display: grid;
+                grid-template-columns: 10rem 1fr;
+                gap: 0.5rem;
+            }
+            .activity-list .cat {
+                font-weight: 500;
+                color: #28251d;
+            }
+            .activity-list .timing {
+                font-size: 0.85rem;
+                color: #7a7974;
+                font-weight: 400;
+            }
 
-    /* ── Privacy callout ── */
-    .callout {
-      background: #edeae5;
-      border-radius: 6px;
-      padding: 1rem 1.25rem;
-      margin: 1.75rem 0;
-      font-size: 0.95rem;
-      color: #3a3830;
-    }
-    .callout strong { display: block; margin-bottom: 0.25rem; color: #28251d; }
+            /* ── Privacy callout ── */
+            .callout {
+                background: #edeae5;
+                border-radius: 6px;
+                padding: 1rem 1.25rem;
+                margin: 1.75rem 0;
+                font-size: 0.95rem;
+                color: #3a3830;
+            }
+            .callout strong {
+                display: block;
+                margin-bottom: 0.25rem;
+                color: #28251d;
+            }
 
-    /* ── Footer ── */
-    footer {
-      margin-top: 3rem;
-      font-size: 0.875rem;
-      color: #7a7974;
-      display: flex;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-    }
-    a { color: #01696f; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+            /* ── Footer ── */
+            footer {
+                margin-top: 3rem;
+                font-size: 0.875rem;
+                color: #7a7974;
+                display: flex;
+                gap: 1.25rem;
+                flex-wrap: wrap;
+            }
+            a {
+                color: #01696f;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
 
-    /* ── Dark mode ── */
-    @media (prefers-color-scheme: dark) {
-      body { background: #171614; color: #cdccca; }
-      .wordmark, .tagline, h2 { color: #cdccca; }
-      .callout strong { color: #cdccca; }
-      .lead, .activity-list li, .callout { color: #a8a7a4; }
-      .activity-list .cat { color: #cdccca; }
-      .activity-list .timing, footer { color: #797876; }
-      .callout { background: #22211f; }
-      .divider { background: #2c2b29; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
+            /* ── Dark mode ── */
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #171614;
+                    color: #cdccca;
+                }
+                .wordmark,
+                .tagline,
+                h2 {
+                    color: #cdccca;
+                }
+                .callout strong {
+                    color: #cdccca;
+                }
+                .lead,
+                .activity-list li,
+                .callout {
+                    color: #a8a7a4;
+                }
+                .activity-list .cat {
+                    color: #cdccca;
+                }
+                .activity-list .timing,
+                footer {
+                    color: #797876;
+                }
+                .callout {
+                    background: #22211f;
+                }
+                .divider {
+                    background: #2c2b29;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <!-- Idle icon -->
+                <svg
+                    class="logo"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <rect width="40" height="40" rx="8.8" fill="#263430" />
+                    <rect
+                        x="11.6"
+                        y="11.6"
+                        width="6.6"
+                        height="16.9"
+                        rx="2"
+                        fill="#7ECDC8"
+                    />
+                    <rect
+                        x="22.2"
+                        y="11.6"
+                        width="6.6"
+                        height="16.9"
+                        rx="2"
+                        fill="#7ECDC8"
+                    />
+                </svg>
+                <span class="wordmark">idle</span>
+            </div>
 
-    <div class="header">
-      <!-- Idle icon -->
-      <svg class="logo" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect width="40" height="40" rx="8.8" fill="#263430"/>
-        <rect x="11.6" y="11.6" width="6.6" height="16.9" rx="2" fill="#7ECDC8"/>
-        <rect x="22.2" y="11.6" width="6.6" height="16.9" rx="2" fill="#7ECDC8"/>
-      </svg>
-      <span class="wordmark">idle</span>
-    </div>
+            <p class="tagline">Brain breaks for AI wait times</p>
 
-    <p class="tagline">Brain breaks for AI wait times</p>
+            <p class="lead">
+                Idle surfaces a brief, research-backed activity every time you
+                wait for an AI response — instead of anxiously refreshing or
+                picking up your phone. When the response arrives, the panel
+                quietly fades away.
+            </p>
 
-    <p class="lead">
-      Idle surfaces a brief, research-backed activity every time you wait for an AI
-      response — instead of anxiously refreshing or picking up your phone. When the
-      response arrives, the panel quietly fades away.
-    </p>
+            <a
+                class="install-btn"
+                href="https://chromewebstore.google.com/detail/idle"
+                target="_blank"
+                rel="noopener"
+            >
+                Get Idle for Chrome
+            </a>
 
-    <a class="install-btn" href="https://chromewebstore.google.com/detail/idle" target="_blank" rel="noopener">
-      Get Idle for Chrome
-    </a>
+            <div class="divider"></div>
 
-    <div class="divider"></div>
+            <h2>Activities matched to your wait time</h2>
+            <ul class="activity-list">
+                <li>
+                    <span class="cat"
+                        >Physical Reset <span class="timing">0–60 s</span></span
+                    >
+                    <span
+                        >Eye rest, shoulder rolls, slow breathing,
+                        stretching</span
+                    >
+                </li>
+                <li>
+                    <span class="cat"
+                        >Context Preserving
+                        <span class="timing">1–3 min</span></span
+                    >
+                    <span
+                        >Re-read your prompt, name an assumption, picture the
+                        expected output</span
+                    >
+                </li>
+                <li>
+                    <span class="cat"
+                        >Write Only <span class="timing">3–5 min</span></span
+                    >
+                    <span
+                        >Draft the follow-up, note a decision, write the handoff
+                        line</span
+                    >
+                </li>
+                <li>
+                    <span class="cat"
+                        >Diffuse <span class="timing">5 min+</span></span
+                    >
+                    <span
+                        >Look out a window, close your eyes, let your mind
+                        wander</span
+                    >
+                </li>
+            </ul>
 
-    <h2>Activities matched to your wait time</h2>
-    <ul class="activity-list">
-      <li>
-        <span class="cat">Physical Reset <span class="timing">0–60 s</span></span>
-        <span>Eye rest, shoulder rolls, slow breathing, stretching</span>
-      </li>
-      <li>
-        <span class="cat">Context Preserving <span class="timing">1–3 min</span></span>
-        <span>Re-read your prompt, name an assumption, picture the expected output</span>
-      </li>
-      <li>
-        <span class="cat">Write Only <span class="timing">3–5 min</span></span>
-        <span>Draft the follow-up, note a decision, write the handoff line</span>
-      </li>
-      <li>
-        <span class="cat">Diffuse <span class="timing">5 min+</span></span>
-        <span>Look out a window, close your eyes, let your mind wander</span>
-      </li>
-    </ul>
+            <div class="callout">
+                <strong
+                    >No telemetry. No accounts. Everything stays in your
+                    browser.</strong
+                >
+                Idle makes zero network requests. All data is stored locally in
+                IndexedDB and never leaves your device. Prompt capture is opt-in
+                and session-scoped only.
+            </div>
 
-    <div class="callout">
-      <strong>No telemetry. No accounts. Everything stays in your browser.</strong>
-      Idle makes zero network requests. All data is stored locally in IndexedDB and
-      never leaves your device. Prompt capture is opt-in and session-scoped only.
-    </div>
-
-    <footer>
-      <span>Idle &middot; &copy; 2026 Boundless Faust</span>
-      <a href="./privacy/">Privacy Policy</a>
-      <a href="https://github.com/boundlessfaust/idle-app" target="_blank" rel="noopener">GitHub</a>
-    </footer>
-
-  </div>
-</body>
+            <footer>
+                <span>Idle &middot; &copy; 2026</span>
+                <a href="./privacy/">Privacy Policy</a>
+                <a
+                    href="https://github.com/boundlessfaust/idle-app"
+                    target="_blank"
+                    rel="noopener"
+                    >GitHub</a
+                >
+            </footer>
+        </div>
+    </body>
 </html>
