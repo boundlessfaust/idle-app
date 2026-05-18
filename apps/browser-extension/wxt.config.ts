@@ -41,4 +41,22 @@ export default defineConfig({
     // WXT_OPEN_BROWSER=false in devcontainer — container has no display
     disabled: process.env.WXT_OPEN_BROWSER === 'false',
   },
+
+  hooks: {
+    // Strip localhost/127.0.0.1 from production builds so they never appear in
+    // the Chrome Web Store manifest. Preserved for `wxt dev` and E2E builds
+    // (E2E_BUILD=true) because fixture tests serve HTML from 127.0.0.1.
+    'build:manifestGenerated'(wxt, manifest) {
+      if (wxt.config.command === 'serve' || process.env.E2E_BUILD === 'true') return;
+      const devOnly = ['*://localhost/*', '*://127.0.0.1/*'];
+      for (const cs of manifest.content_scripts ?? []) {
+        cs.matches = cs.matches?.filter((m: string) => !devOnly.includes(m));
+      }
+      for (const war of manifest.web_accessible_resources ?? []) {
+        if (Array.isArray(war.matches)) {
+          war.matches = war.matches.filter((m: string) => !devOnly.includes(m));
+        }
+      }
+    },
+  },
 });

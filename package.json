@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "pnpm --filter @idle/browser-extension run dev",
     "build": "pnpm --filter @idle/browser-extension run build",
+    "build:e2e": "pnpm --filter @idle/browser-extension run build:e2e",
     "test": "pnpm --filter @idle/core run test",
     "test:e2e": "pnpm --filter @idle/browser-extension run test:e2e",
     "lint": "biome check .",
