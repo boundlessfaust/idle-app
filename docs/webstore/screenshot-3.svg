@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="800" viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+  <title>Idle — popup quick controls</title>
+
+  <defs>
+    <filter id="popup-shadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <!-- ── Browser chrome ── -->
+  <rect width="1280" height="52" fill="#F1F3F4"/>
+  <rect x="8" y="8" width="208" height="36" rx="6" fill="#FFFFFF"/>
+  <rect x="19" y="16" width="16" height="16" rx="3.5" fill="#263430"/>
+  <rect x="23.6" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <rect x="27.9" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <text x="43" y="30" font-size="12" fill="#1A1A1A">Claude · New chat</text>
+  <text x="236" y="32" font-size="20" fill="#AAAAAA">&#8249;</text>
+  <text x="256" y="32" font-size="20" fill="#CCCCCC">&#8250;</text>
+  <rect x="344" y="13" width="592" height="26" rx="13" fill="#FFFFFF"/>
+  <text x="640" y="30" text-anchor="middle" font-size="13" fill="#5A5A5A">claude.ai</text>
+  <!-- Idle icon — highlighted state (popup open) -->
+  <rect x="1207" y="11" width="30" height="30" rx="6" fill="#5B9E9A" opacity="0.18"/>
+  <rect x="1211" y="15" width="22" height="22" rx="4.8" fill="#263430"/>
+  <rect x="1217.3" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <rect x="1223.1" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <circle cx="1256" cy="22" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="29" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="36" r="1.8" fill="#777777"/>
+
+  <!-- ── Page behind popup ── -->
+  <rect x="0" y="52" width="1280" height="748" fill="#FAFAF8"/>
+  <!-- Sidebar -->
+  <rect x="0" y="52" width="240" height="748" fill="#1C1C1C"/>
+  <rect x="12" y="68" width="216" height="36" rx="6" fill="#2A2A2A" stroke="#383838" stroke-width="1"/>
+  <text x="120" y="90" text-anchor="middle" font-size="12" fill="#DDDDDD">+ New chat</text>
+  <rect x="0" y="120" width="240" height="40" fill="#2D2D2D"/>
+  <text x="16" y="138" font-size="12" fill="#E0E0E0" font-weight="500">Architecture review</text>
+  <text x="16" y="184" font-size="12" fill="#555555">Fix the API parser</text>
+  <text x="16" y="216" font-size="12" fill="#555555">Refactor auth</text>
+  <circle cx="28" cy="780" r="14" fill="#3D8B7A"/>
+  <text x="28" y="784" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">A</text>
+
+  <!-- Dimmed page content (popup is the focus) -->
+  <rect x="240" y="52" width="1040" height="748" fill="#FAFAF8" opacity="0.6"/>
+
+  <!-- ── Popup card (320px wide, below icon at x=1222) ── -->
+  <!-- Small caret pointing up to icon -->
+  <polygon points="1216,52 1236,52 1226,44" fill="#F9F9F7"/>
+
+  <!-- Popup shadow -->
+  <rect x="940" y="52" width="320" height="248" rx="0" fill="#F9F9F7"
+        filter="url(#popup-shadow)"/>
+
+  <!-- Popup content -->
+  <!-- Row 1: Idle toggle -->
+  <text x="956" y="93" font-size="13" fill="#555555" font-weight="500">Idle</text>
+  <!-- Toggle On -->
+  <rect x="1188" y="68" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="1216" y="91" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- Divider -->
+  <line x1="940" y1="120" x2="1260" y2="120" stroke="#E8E8E8" stroke-width="1"/>
+
+  <!-- Row 2: Detection mode -->
+  <text x="956" y="159" font-size="13" fill="#555555" font-weight="500">Detection</text>
+  <rect x="1168" y="135" width="76" height="36" rx="4" fill="#F2F2F0" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="1206" y="158" text-anchor="middle" font-size="12" fill="#444444">Auto</text>
+
+  <!-- Row 3: Mute button (full width) -->
+  <rect x="956" y="183" width="288" height="44" rx="4" fill="#F2F2F0" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="1100" y="210" text-anchor="middle" font-size="12" fill="#444444">Mute for 1 hour</text>
+
+  <!-- Footer divider -->
+  <line x1="940" y1="243" x2="1260" y2="243" stroke="#E8E8E8" stroke-width="1"/>
+
+  <!-- Settings link -->
+  <text x="1244" y="264" font-size="11" fill="#888888" text-anchor="end">Settings</text>
+
+  <!-- ── Annotation bubble pointing to panel (explanatory label) ── -->
+  <!-- Left side label showing "Quick access — enable, mute, or check detection mode" -->
+  <rect x="280" y="80" width="340" height="60" rx="8"
+        fill="#FFFFFF" stroke="#E4E4E0" stroke-width="1"/>
+  <text x="450" y="108" text-anchor="middle" font-size="13" font-weight="500" fill="#1A1A1A">Quick access from any tab</text>
+  <text x="450" y="128" text-anchor="middle" font-size="12" fill="#666666">Enable, mute, or change detection mode</text>
+  <!-- Arrow from label to popup -->
+  <line x1="620" y1="110" x2="935" y2="100" stroke="#CCCCCC" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="935,100 926,95 926,105" fill="#CCCCCC"/>
+
+</svg>

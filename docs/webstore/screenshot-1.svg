@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="800" viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+  <title>Idle — appears automatically while AI responds (light mode)</title>
+
+  <defs>
+    <filter id="panel-shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#000000" flood-opacity="0.09"/>
+    </filter>
+  </defs>
+
+  <!-- ── Browser chrome ── -->
+  <rect width="1280" height="52" fill="#F1F3F4"/>
+  <!-- Active tab -->
+  <rect x="8" y="8" width="208" height="36" rx="6" fill="#FFFFFF"/>
+  <!-- Tab favicon: idle icon 16px -->
+  <rect x="19" y="16" width="16" height="16" rx="3.5" fill="#263430"/>
+  <rect x="23.6" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <rect x="27.9" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <text x="43" y="30" font-size="12" fill="#1A1A1A">Claude · New chat</text>
+  <!-- Nav buttons -->
+  <text x="236" y="32" font-size="20" fill="#AAAAAA">&#8249;</text>
+  <text x="256" y="32" font-size="20" fill="#CCCCCC">&#8250;</text>
+  <!-- Address bar -->
+  <rect x="344" y="13" width="592" height="26" rx="13" fill="#FFFFFF"/>
+  <text x="640" y="30" text-anchor="middle" font-size="13" fill="#5A5A5A">claude.ai</text>
+  <!-- Toolbar: Idle icon 22px at x=1211 y=15 -->
+  <rect x="1211" y="15" width="22" height="22" rx="4.8" fill="#263430"/>
+  <rect x="1217.3" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <rect x="1223.1" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <!-- Menu -->
+  <circle cx="1256" cy="22" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="29" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="36" r="1.8" fill="#777777"/>
+
+  <!-- ── Sidebar ── -->
+  <rect x="0" y="52" width="240" height="748" fill="#1C1C1C"/>
+  <!-- New chat -->
+  <rect x="12" y="68" width="216" height="36" rx="6" fill="#2A2A2A" stroke="#383838" stroke-width="1"/>
+  <text x="120" y="90" text-anchor="middle" font-size="12" fill="#DDDDDD">+ New chat</text>
+  <!-- Conversations -->
+  <rect x="0" y="120" width="240" height="40" fill="#2D2D2D"/>
+  <text x="16" y="138" font-size="12" fill="#E0E0E0" font-weight="500">Fix the API parser</text>
+  <text x="16" y="153" font-size="10" fill="#555555">Just now</text>
+  <text x="16" y="184" font-size="12" fill="#555555">Refactor auth middleware</text>
+  <text x="16" y="216" font-size="12" fill="#555555">Write unit tests for store</text>
+  <text x="16" y="248" font-size="12" fill="#555555">Explain async patterns</text>
+  <text x="16" y="280" font-size="12" fill="#555555">Database indexing help</text>
+  <!-- User avatar -->
+  <circle cx="28" cy="780" r="14" fill="#3D8B7A"/>
+  <text x="28" y="784" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">A</text>
+
+  <!-- ── Main chat area ── -->
+  <rect x="240" y="52" width="1040" height="748" fill="#FAFAF8"/>
+
+  <!-- User message (right-aligned in chat column x=340..940) -->
+  <rect x="506" y="76" width="418" height="60" rx="12" fill="#F0F0EC"/>
+  <text x="526" y="100" font-size="14" fill="#1A1A1A">Write a Python function that fetches</text>
+  <text x="526" y="118" font-size="14" fill="#1A1A1A">JSON from an API and handles errors.</text>
+
+  <!-- AI response -->
+  <text x="356" y="168" font-size="14" fill="#1A1A1A">Here&#39;s a clean, robust implementation:</text>
+
+  <!-- Code block -->
+  <rect x="356" y="182" width="568" height="152" rx="6" fill="#F1F1EF" stroke="#E4E4E0" stroke-width="1"/>
+  <text x="372" y="200" font-size="10" fill="#999999" font-family="ui-monospace, Menlo, monospace">python</text>
+  <line x1="356" y1="208" x2="924" y2="208" stroke="#E4E4E0" stroke-width="1"/>
+  <text x="372" y="225" font-size="11.5" fill="#1558D6" font-family="ui-monospace, Menlo, monospace">import</text>
+  <text x="417" y="225" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">requests</text>
+  <text x="372" y="243" font-size="11.5" fill="#1558D6" font-family="ui-monospace, Menlo, monospace">from</text>
+  <text x="403" y="243" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">typing</text>
+  <text x="445" y="243" font-size="11.5" fill="#1558D6" font-family="ui-monospace, Menlo, monospace">import</text>
+  <text x="490" y="243" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">Any, Dict, Optional</text>
+  <text x="372" y="261" font-size="11.5" fill="#1558D6" font-family="ui-monospace, Menlo, monospace">def</text>
+  <text x="394" y="261" font-size="11.5" fill="#6F42C1" font-family="ui-monospace, Menlo, monospace">fetch_json</text>
+  <text x="455" y="261" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">(url: str) -&gt; Optional[Dict[str, Any]]:</text>
+  <text x="372" y="279" font-size="11.5" fill="#1558D6" font-family="ui-monospace, Menlo, monospace">    try:</text>
+  <text x="372" y="297" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">        r = requests.get(url, timeout=10)</text>
+  <text x="372" y="315" font-size="11.5" fill="#24292F" font-family="ui-monospace, Menlo, monospace">        r.raise_for_status()</text>
+
+  <!-- AI text continues after code block -->
+  <text x="356" y="356" font-size="14" fill="#1A1A1A">This pattern separates network failures from JSON parse</text>
+  <text x="356" y="376" font-size="14" fill="#1A1A1A">errors, so you can handle each case differently. You&#39;ll also</text>
+  <text x="356" y="396" font-size="14" fill="#1A1A1A">want to add retry logic for transient</text>
+
+  <!-- Streaming dots — AI is still generating -->
+  <circle cx="618" cy="391" r="3.5" fill="#AAAAAA"/>
+  <circle cx="630" cy="391" r="3.5" fill="#AAAAAA" opacity="0.6"/>
+  <circle cx="642" cy="391" r="3.5" fill="#AAAAAA" opacity="0.3"/>
+
+  <!-- Input area -->
+  <rect x="340" y="722" width="600" height="52" rx="16" fill="#FFFFFF" stroke="#E4E4E0" stroke-width="1"/>
+  <text x="368" y="752" font-size="14" fill="#C0C0B8">Reply to Claude…</text>
+  <circle cx="912" cy="748" r="18" fill="#3D8B7A"/>
+  <text x="912" y="756" text-anchor="middle" font-size="18" fill="#FFFFFF">&#8593;</text>
+
+  <!-- ── Idle panel (bottom-right, floating over page) ── -->
+  <!-- Shadow layers -->
+  <rect x="943" y="578" width="320" height="192" rx="9" fill="#000000" opacity="0.04"/>
+  <rect x="942" y="576" width="320" height="192" rx="9" fill="#000000" opacity="0.03"/>
+  <!-- Panel -->
+  <rect x="940" y="572" width="320" height="192" rx="8"
+        fill="#FAFAFA" stroke="#00000012" stroke-width="1"
+        filter="url(#panel-shadow)"/>
+
+  <!-- Drag handle area -->
+  <circle cx="1086" cy="586" r="2" fill="#D4D4D4"/>
+  <circle cx="1094" cy="586" r="2" fill="#D4D4D4"/>
+  <circle cx="1102" cy="586" r="2" fill="#D4D4D4"/>
+  <!-- Reset button (hover-only, show faintly) -->
+  <text x="953" y="592" font-size="12" fill="#DEDEDE">&#8617;</text>
+
+  <!-- Card content (starts after drag handle at y=600) -->
+  <!-- Meta row -->
+  <text x="956" y="614" font-size="10.5" fill="#888888" letter-spacing="0.4">PHYSICAL RESET</text>
+  <text x="1244" y="614" font-size="10.5" fill="#888888" text-anchor="end">20 SEC</text>
+
+  <!-- Title -->
+  <text x="956" y="633" font-size="13" font-weight="500" fill="#3A3A3A">Look 20 feet away</text>
+
+  <!-- Body -->
+  <text x="956" y="655" font-size="14" fill="#1A1A1A">Pick the farthest object you can see</text>
+  <text x="956" y="677" font-size="14" fill="#1A1A1A">and rest your eyes on it for 20 seconds.</text>
+
+  <!-- Panel divider -->
+  <line x1="940" y1="695" x2="1260" y2="695" stroke="#E8E8E8" stroke-width="1"/>
+
+  <!-- Actions row -->
+  <text x="956" y="726" font-size="12" fill="#888888">Skip</text>
+  <text x="1244" y="726" font-size="12" fill="#888888" text-anchor="end">Mute</text>
+
+</svg>

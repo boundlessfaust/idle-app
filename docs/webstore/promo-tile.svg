@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="440" height="280" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+  <title>Idle — promo tile 440×280</title>
+
+  <!-- Background -->
+  <rect width="440" height="280" fill="#F2EFE9"/>
+
+  <!-- Subtle grid texture (optional light pattern) -->
+
+  <!-- ── Left: brand ── -->
+
+  <!-- Idle icon 48×48 centered at (108, 80) -->
+  <rect x="84" y="56" width="48" height="48" rx="10.6" fill="#263430"/>
+  <!-- Bar 1: 0.289*48=13.9, 0.164*48=7.9, 0.422*48=20.3 -->
+  <rect x="97.9" y="69.9" width="7.9" height="20.3" rx="2.4" fill="#7ECDC8"/>
+  <!-- Bar 2: 0.555*48=26.6 -->
+  <rect x="110.6" y="69.9" width="7.9" height="20.3" rx="2.4" fill="#7ECDC8"/>
+
+  <!-- "idle" wordmark -->
+  <text x="108" y="168" text-anchor="middle"
+        font-size="60" font-weight="300" letter-spacing="-0.5"
+        fill="#1A1A1A">idle</text>
+
+  <!-- Tagline -->
+  <text x="108" y="194" text-anchor="middle"
+        font-size="13" fill="#777777">Brain breaks for</text>
+  <text x="108" y="212" text-anchor="middle"
+        font-size="13" fill="#777777">AI wait times</text>
+
+  <!-- Sites -->
+  <text x="108" y="254" text-anchor="middle"
+        font-size="10" fill="#AAAAAA" letter-spacing="0.2">claude.ai · chatgpt.com · gemini · perplexity</text>
+
+  <!-- Divider -->
+  <line x1="220" y1="28" x2="220" y2="252" stroke="#E0DDD8" stroke-width="1"/>
+
+  <!-- ── Right: panel mockup ── -->
+
+  <defs>
+    <filter id="tile-shadow" x="-8%" y="-8%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000000" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <!-- Panel card: x=240, y=32, w=182, h=216 -->
+  <rect x="240" y="32" width="182" height="216" rx="7"
+        fill="#FAFAFA" stroke="#00000012" stroke-width="1"
+        filter="url(#tile-shadow)"/>
+
+  <!-- Drag handle dots -->
+  <circle cx="322" cy="48" r="1.8" fill="#D4D4D4"/>
+  <circle cx="330" cy="48" r="1.8" fill="#D4D4D4"/>
+  <circle cx="338" cy="48" r="1.8" fill="#D4D4D4"/>
+
+  <!-- Card content — starts at y=60 (32+12+16) -->
+  <!-- Meta row -->
+  <text x="254" y="74" font-size="8" fill="#888888" letter-spacing="0.4">PHYSICAL RESET</text>
+  <text x="408" y="74" font-size="8" fill="#888888" text-anchor="end">20 SEC</text>
+
+  <!-- Title -->
+  <text x="254" y="91" font-size="10" font-weight="500" fill="#3A3A3A">Look 20 feet away</text>
+
+  <!-- Body -->
+  <text x="254" y="108" font-size="10" fill="#1A1A1A">Pick the farthest object</text>
+  <text x="254" y="121" font-size="10" fill="#1A1A1A">you can see and rest</text>
+  <text x="254" y="134" font-size="10" fill="#1A1A1A">your eyes on it.</text>
+
+  <!-- Divider -->
+  <line x1="240" y1="152" x2="422" y2="152" stroke="#E8E8E8" stroke-width="1"/>
+
+  <!-- Actions -->
+  <text x="254" y="177" font-size="10" fill="#888888">Skip</text>
+  <text x="408" y="177" font-size="10" fill="#888888" text-anchor="end">Mute</text>
+
+  <!-- Second card preview below — Diffuse example -->
+  <!-- Separator label -->
+  <text x="254" y="207" font-size="8" fill="#888888" letter-spacing="0.4">DIFFUSE</text>
+  <text x="408" y="207" font-size="8" fill="#888888" text-anchor="end">1 MIN</text>
+  <text x="254" y="222" font-size="10" font-weight="500" fill="#3A3A3A">Close your eyes</text>
+  <text x="254" y="237" font-size="9" fill="#888888">Sixty seconds. Just stop</text>
+
+</svg>

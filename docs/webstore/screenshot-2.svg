@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="800" viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+  <title>Idle — Write Only panel with capture textarea</title>
+
+  <defs>
+    <filter id="panel-shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#000000" flood-opacity="0.09"/>
+    </filter>
+  </defs>
+
+  <!-- ── Browser chrome ── -->
+  <rect width="1280" height="52" fill="#F1F3F4"/>
+  <rect x="8" y="8" width="208" height="36" rx="6" fill="#FFFFFF"/>
+  <rect x="19" y="16" width="16" height="16" rx="3.5" fill="#263430"/>
+  <rect x="23.6" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <rect x="27.9" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <text x="43" y="30" font-size="12" fill="#1A1A1A">Claude · New chat</text>
+  <text x="236" y="32" font-size="20" fill="#AAAAAA">&#8249;</text>
+  <text x="256" y="32" font-size="20" fill="#CCCCCC">&#8250;</text>
+  <rect x="344" y="13" width="592" height="26" rx="13" fill="#FFFFFF"/>
+  <text x="640" y="30" text-anchor="middle" font-size="13" fill="#5A5A5A">claude.ai</text>
+  <rect x="1211" y="15" width="22" height="22" rx="4.8" fill="#263430"/>
+  <rect x="1217.3" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <rect x="1223.1" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <circle cx="1256" cy="22" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="29" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="36" r="1.8" fill="#777777"/>
+
+  <!-- ── Sidebar ── -->
+  <rect x="0" y="52" width="240" height="748" fill="#1C1C1C"/>
+  <rect x="12" y="68" width="216" height="36" rx="6" fill="#2A2A2A" stroke="#383838" stroke-width="1"/>
+  <text x="120" y="90" text-anchor="middle" font-size="12" fill="#DDDDDD">+ New chat</text>
+  <rect x="0" y="120" width="240" height="40" fill="#2D2D2D"/>
+  <text x="16" y="138" font-size="12" fill="#E0E0E0" font-weight="500">Architecture review</text>
+  <text x="16" y="153" font-size="10" fill="#555555">Just now</text>
+  <text x="16" y="184" font-size="12" fill="#555555">Fix the API parser</text>
+  <text x="16" y="216" font-size="12" fill="#555555">Refactor auth middleware</text>
+  <text x="16" y="248" font-size="12" fill="#555555">Database indexing</text>
+  <circle cx="28" cy="780" r="14" fill="#3D8B7A"/>
+  <text x="28" y="784" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">A</text>
+
+  <!-- ── Main chat area ── -->
+  <rect x="240" y="52" width="1040" height="748" fill="#FAFAF8"/>
+
+  <!-- User message -->
+  <rect x="454" y="76" width="470" height="60" rx="12" fill="#F0F0EC"/>
+  <text x="474" y="100" font-size="14" fill="#1A1A1A">How should I structure the data access</text>
+  <text x="474" y="118" font-size="14" fill="#1A1A1A">layer for a medium-sized Node.js app?</text>
+
+  <!-- AI response (5+ min response, longer wait) -->
+  <text x="356" y="168" font-size="14" fill="#1A1A1A">Great question — the data access layer is worth getting right</text>
+  <text x="356" y="188" font-size="14" fill="#1A1A1A">before it becomes painful to change. Here&#39;s how I&#39;d approach it:</text>
+
+  <!-- Section heading -->
+  <text x="356" y="218" font-size="14" font-weight="600" fill="#1A1A1A">1. Separate concerns with a repository pattern</text>
+  <text x="356" y="240" font-size="14" fill="#1A1A1A">Keep all database queries behind an interface. Your service layer</text>
+  <text x="356" y="260" font-size="14" fill="#1A1A1A">calls the repository, never the ORM directly. This makes testing</text>
+  <text x="356" y="280" font-size="14" fill="#1A1A1A">and swapping databases straightforward.</text>
+
+  <text x="356" y="312" font-size="14" font-weight="600" fill="#1A1A1A">2. Use a thin ORM or query builder</text>
+  <text x="356" y="334" font-size="14" fill="#1A1A1A">Prisma and Drizzle are good choices for Node.js — they give you</text>
+  <text x="356" y="354" font-size="14" fill="#1A1A1A">type safety without hiding the SQL. Avoid heavy ORMs that</text>
+  <text x="356" y="374" font-size="14" fill="#1A1A1A">abstract away too much.</text>
+
+  <text x="356" y="406" font-size="14" font-weight="600" fill="#1A1A1A">3. Connection pooling</text>
+  <text x="356" y="428" font-size="14" fill="#1A1A1A">Use a connection pool sized for your workload. For PostgreSQL,</text>
+  <text x="356" y="448" font-size="14" fill="#1A1A1A">PgBouncer in transaction mode works well. The default Node</text>
+  <text x="356" y="468" font-size="14" fill="#1A1A1A">postgres library includes basic pooling</text>
+
+  <!-- Streaming dots -->
+  <circle cx="664" cy="463" r="3.5" fill="#AAAAAA"/>
+  <circle cx="676" cy="463" r="3.5" fill="#AAAAAA" opacity="0.6"/>
+  <circle cx="688" cy="463" r="3.5" fill="#AAAAAA" opacity="0.3"/>
+
+  <!-- Input area -->
+  <rect x="340" y="722" width="600" height="52" rx="16" fill="#FFFFFF" stroke="#E4E4E0" stroke-width="1"/>
+  <text x="368" y="752" font-size="14" fill="#C0C0B8">Reply to Claude…</text>
+  <circle cx="912" cy="748" r="18" fill="#3D8B7A"/>
+  <text x="912" y="756" text-anchor="middle" font-size="18" fill="#FFFFFF">&#8593;</text>
+
+  <!-- ── Idle panel — Write Only with textarea (taller panel) ── -->
+  <rect x="943" y="492" width="320" height="282" rx="9" fill="#000000" opacity="0.04"/>
+  <rect x="942" y="490" width="320" height="282" rx="9" fill="#000000" opacity="0.03"/>
+  <rect x="940" y="486" width="320" height="282" rx="8"
+        fill="#FAFAFA" stroke="#00000012" stroke-width="1"
+        filter="url(#panel-shadow)"/>
+
+  <!-- Drag handle -->
+  <circle cx="1086" cy="500" r="2" fill="#D4D4D4"/>
+  <circle cx="1094" cy="500" r="2" fill="#D4D4D4"/>
+  <circle cx="1102" cy="500" r="2" fill="#D4D4D4"/>
+
+  <!-- Card content -->
+  <!-- Meta row -->
+  <text x="956" y="524" font-size="10.5" fill="#888888" letter-spacing="0.4">WRITE ONLY</text>
+  <text x="1244" y="524" font-size="10.5" fill="#888888" text-anchor="end">2 MIN</text>
+
+  <!-- Title -->
+  <text x="956" y="543" font-size="13" font-weight="500" fill="#3A3A3A">Draft your next instruction</text>
+
+  <!-- Body (1 line — short enough to single line) -->
+  <text x="956" y="564" font-size="14" fill="#1A1A1A">What&#39;s the follow-up? Type it here</text>
+  <text x="956" y="582" font-size="14" fill="#1A1A1A">before this response changes your thinking.</text>
+
+  <!-- WriteOnly section -->
+  <!-- Header row: "CAPTURE" label + pin button -->
+  <text x="956" y="614" font-size="10" fill="#888888" letter-spacing="0.4">CAPTURE</text>
+  <text x="1244" y="614" font-size="16" fill="#888888" opacity="0.5" text-anchor="end">&#9651;</text>
+
+  <!-- Textarea (focused, showing typed content) -->
+  <rect x="956" y="622" width="288" height="64" rx="4"
+        fill="#F3F3F1" stroke="#5B9E9A" stroke-width="1.5"/>
+  <text x="966" y="639" font-size="12.5" fill="#1A1A1A" font-family="inherit">Ask about migration strategy — can</text>
+  <text x="966" y="654" font-size="12.5" fill="#1A1A1A">we run both layers in parallel during</text>
+  <text x="966" y="669" font-size="12.5" fill="#1A1A1A">the transition?</text>
+  <!-- Cursor -->
+  <rect x="1048" y="673" width="1.5" height="12" fill="#3D8B7A"/>
+
+  <!-- Panel divider -->
+  <line x1="940" y1="700" x2="1260" y2="700" stroke="#E8E8E8" stroke-width="1"/>
+
+  <!-- Actions -->
+  <text x="956" y="730" font-size="12" fill="#888888">Skip</text>
+  <text x="1244" y="730" font-size="12" fill="#888888" text-anchor="end">Mute</text>
+
+</svg>

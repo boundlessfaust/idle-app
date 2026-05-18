@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="800" viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+  <title>Idle — Settings / Options page</title>
+
+  <!-- ── Browser chrome ── -->
+  <rect width="1280" height="52" fill="#F1F3F4"/>
+  <rect x="8" y="8" width="208" height="36" rx="6" fill="#FFFFFF"/>
+  <rect x="19" y="16" width="16" height="16" rx="3.5" fill="#263430"/>
+  <rect x="23.6" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <rect x="27.9" y="20.6" width="2.6" height="6.75" rx="1" fill="#7ECDC8"/>
+  <text x="43" y="30" font-size="12" fill="#1A1A1A">Idle — Settings</text>
+  <text x="236" y="32" font-size="20" fill="#AAAAAA">&#8249;</text>
+  <text x="256" y="32" font-size="20" fill="#CCCCCC">&#8250;</text>
+  <!-- URL bar shows extension page -->
+  <rect x="344" y="13" width="592" height="26" rx="13" fill="#FFFFFF"/>
+  <text x="640" y="30" text-anchor="middle" font-size="12" fill="#888888">Idle — Settings</text>
+  <!-- Idle toolbar icon -->
+  <rect x="1211" y="15" width="22" height="22" rx="4.8" fill="#263430"/>
+  <rect x="1217.3" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <rect x="1223.1" y="21.3" width="3.6" height="9.3" rx="1" fill="#7ECDC8"/>
+  <circle cx="1256" cy="22" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="29" r="1.8" fill="#777777"/>
+  <circle cx="1256" cy="36" r="1.8" fill="#777777"/>
+
+  <!-- ── Options page (full-width white) ── -->
+  <rect x="0" y="52" width="1280" height="748" fill="#FFFFFF"/>
+
+  <!-- Centered container: x=320..960 (640px wide) -->
+
+  <!-- Page title -->
+  <text x="320" y="108" font-size="20" font-weight="600" fill="#1A1A1A" letter-spacing="-0.01em">Idle Settings</text>
+
+  <!-- ── Section: Sites ── -->
+  <line x1="320" y1="128" x2="960" y2="128" stroke="#E8E8E8" stroke-width="1"/>
+  <text x="320" y="155" font-size="15" font-weight="600" fill="#1A1A1A">Sites</text>
+
+  <!-- claude.ai -->
+  <text x="320" y="192" font-size="13" fill="#444444">claude.ai</text>
+  <rect x="888" y="170" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="193" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- chatgpt.com -->
+  <text x="320" y="232" font-size="13" fill="#444444">chatgpt.com</text>
+  <rect x="888" y="210" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="233" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- gemini.google.com -->
+  <text x="320" y="272" font-size="13" fill="#444444">gemini.google.com</text>
+  <rect x="888" y="250" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="273" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- perplexity.ai -->
+  <text x="320" y="312" font-size="13" fill="#444444">perplexity.ai</text>
+  <rect x="888" y="290" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="313" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- ── Section: Activity Categories ── -->
+  <line x1="320" y1="340" x2="960" y2="340" stroke="#E8E8E8" stroke-width="1"/>
+  <text x="320" y="367" font-size="15" font-weight="600" fill="#1A1A1A">Activity Categories</text>
+
+  <!-- Physical Reset -->
+  <text x="320" y="404" font-size="13" fill="#444444">Physical Reset</text>
+  <rect x="888" y="382" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="405" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- Context Preserving -->
+  <text x="320" y="444" font-size="13" fill="#444444">Context Preserving</text>
+  <rect x="888" y="422" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="445" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- Write Only -->
+  <text x="320" y="484" font-size="13" fill="#444444">Write Only</text>
+  <rect x="888" y="462" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="485" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- Diffuse -->
+  <text x="320" y="524" font-size="13" fill="#444444">Diffuse</text>
+  <rect x="888" y="502" width="56" height="36" rx="18" fill="#5B9E9A" stroke="#4A8A86" stroke-width="1"/>
+  <text x="916" y="525" text-anchor="middle" font-size="12" font-weight="500" fill="#FFFFFF">On</text>
+
+  <!-- ── Section: Rotation Reset Interval ── -->
+  <line x1="320" y1="552" x2="960" y2="552" stroke="#E8E8E8" stroke-width="1"/>
+  <text x="320" y="579" font-size="15" font-weight="600" fill="#1A1A1A">Rotation Reset Interval</text>
+  <text x="320" y="600" font-size="13" fill="#777777">How often the activity pool resets to prevent repetition.</text>
+  <!-- Dropdown -->
+  <rect x="320" y="614" width="200" height="44" rx="4" fill="#F2F2F0" stroke="#D8D8D8" stroke-width="1"/>
+  <text x="336" y="641" font-size="13" fill="#333333">4 hours</text>
+  <text x="510" y="641" font-size="12" fill="#888888">&#9660;</text>
+
+  <!-- ── Section: Prompt Capture ── -->
+  <line x1="320" y1="674" x2="960" y2="674" stroke="#E8E8E8" stroke-width="1"/>
+  <text x="320" y="701" font-size="15" font-weight="600" fill="#1A1A1A">Prompt Capture</text>
+  <!-- Label stack -->
+  <text x="320" y="730" font-size="13" fill="#444444">Show your prompt in Context activities</text>
+  <text x="320" y="748" font-size="11" fill="#888888">Current message only — stored locally for this session, never transmitted</text>
+  <!-- Toggle off -->
+  <rect x="888" y="718" width="56" height="36" rx="18" fill="#EEEEEE" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="916" y="741" text-anchor="middle" font-size="12" font-weight="500" fill="#777777">Off</text>
+
+</svg>
