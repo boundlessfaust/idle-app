@@ -3,7 +3,6 @@ import { onDestroy, onMount } from 'svelte';
 import { clearPinnedNote, getPinnedNote, getSettings, saveSettings } from '../../lib/store/storage';
 
 let enabled = $state(true);
-let detectionMode = $state<'auto' | 'manual'>('auto');
 let muteUntil = $state(0);
 let hotkeyConflict = $state(false);
 let pinnedNote = $state<string | null>(null);
@@ -31,7 +30,6 @@ function handleRuntimeMessage(msg: { type: string }) {
 onMount(async () => {
   const settings = await getSettings();
   enabled = settings.enabled;
-  detectionMode = settings.detectionMode ?? 'auto';
   muteUntil = settings.muteUntil;
 
   const stored = await chrome.storage.local.get(['hotkeyConflict']);
@@ -54,11 +52,6 @@ onDestroy(() => {
 async function toggleEnabled() {
   enabled = !enabled;
   await saveSettings({ enabled });
-}
-
-async function cycleDetectionMode() {
-  detectionMode = detectionMode === 'auto' ? 'manual' : 'auto';
-  await saveSettings({ detectionMode });
 }
 
 async function muteOneHour() {
@@ -114,20 +107,6 @@ function openOptions() {
   </div>
 
   <div class="divider"></div>
-
-  <div class="row">
-    <span class="label">Detection</span>
-    <button
-      class="mode-btn"
-      onclick={cycleDetectionMode}
-      aria-label="Toggle detection mode"
-      title={detectionMode === 'auto'
-        ? 'Switch to manual hotkey only'
-        : 'Switch to automatic detection'}
-    >
-      {detectionMode === 'auto' ? 'Auto' : 'Manual only'}
-    </button>
-  </div>
 
   <div class="row">
     <button
@@ -249,27 +228,6 @@ function openOptions() {
   }
 
   .toggle:focus-visible {
-    outline: 2px solid #5b9e9a;
-    outline-offset: 2px;
-  }
-
-  .mode-btn {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 5px 12px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background: #f2f2f0;
-    color: #444;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .mode-btn:hover {
-    background: #e8e8e5;
-  }
-
-  .mode-btn:focus-visible {
     outline: 2px solid #5b9e9a;
     outline-offset: 2px;
   }

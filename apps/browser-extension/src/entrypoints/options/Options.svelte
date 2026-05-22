@@ -6,6 +6,8 @@ import {
   type Corner,
   type Settings,
   getPanelCorner,
+  getPinnedNote,
+  getRotationHistory,
   getSettings,
   savePanelCorner,
   saveSettings,
@@ -202,11 +204,11 @@ async function clearDetectorLogs() {
 
 async function exportData() {
   const [s, pos, history, logs, note] = await Promise.all([
-    db.settings.toArray(),
-    db.panelPosition.toArray(),
-    db.rotationHistory.toArray(),
+    getSettings(),
+    getPanelCorner(),
+    getRotationHistory(),
     db.detectorLogs.toArray(),
-    db.pinnedNote.toArray(),
+    getPinnedNote(),
   ]);
   const payload = {
     settings: s,
@@ -228,11 +230,11 @@ async function exportData() {
 async function onAdvancedToggle(e: Event) {
   if ((e.target as HTMLDetailsElement).open) {
     const [s, pos, history, logs, note] = await Promise.all([
-      db.settings.toArray(),
-      db.panelPosition.toArray(),
-      db.rotationHistory.toArray(),
+      getSettings(),
+      getPanelCorner(),
+      getRotationHistory(),
       db.detectorLogs.toArray(),
-      db.pinnedNote.toArray(),
+      getPinnedNote(),
     ]);
     rawDexieData = JSON.stringify(
       {
@@ -342,22 +344,6 @@ function openShortcuts() {
       </div>
     </section>
 
-    <!-- ── Badge style ────────────────────────────────────────────────── -->
-    <section class="section">
-      <h2 class="section-title">Toolbar Badge</h2>
-      <select
-        class="select"
-        value={settings.badgeStyle}
-        onchange={(e) =>
-          set('badgeStyle', (e.target as HTMLSelectElement).value as 'none' | 'active' | 'mute')}
-        aria-label="Toolbar badge style"
-      >
-        <option value="none">None</option>
-        <option value="active">Active indicator</option>
-        <option value="mute">Mute indicator</option>
-      </select>
-    </section>
-
     <!-- ── Detector status ────────────────────────────────────────────── -->
     <section class="section">
       <div class="section-header-row">
@@ -400,37 +386,6 @@ function openShortcuts() {
       <summary class="advanced-summary">Advanced Settings</summary>
 
       <div class="advanced-body">
-        <!-- Log retention -->
-        <div class="adv-row">
-          <label class="adv-label" for="log-retention">Log retention period</label>
-          <select
-            id="log-retention"
-            class="select select-sm"
-            value={settings.logRetentionDays}
-            onchange={(e) =>
-              set('logRetentionDays', Number((e.target as HTMLSelectElement).value))}
-          >
-            <option value={1}>1 day</option>
-            <option value={3}>3 days</option>
-            <option value={7}>7 days</option>
-            <option value={30}>30 days</option>
-          </select>
-        </div>
-
-        <!-- Log entry cap -->
-        <div class="adv-row">
-          <label class="adv-label" for="log-cap">Log entry cap per detector</label>
-          <input
-            id="log-cap"
-            type="number"
-            class="num-input"
-            min="10"
-            max="5000"
-            value={settings.logEntryCap}
-            onchange={(e) => set('logEntryCap', Number((e.target as HTMLInputElement).value))}
-          />
-        </div>
-
         <!-- Rotation N -->
         <div class="adv-row">
           <label class="adv-label" for="rotation-n">
@@ -458,7 +413,7 @@ function openShortcuts() {
         <div class="adv-section">
           <h3 class="adv-heading">About</h3>
           <p class="about-line">Idle — AI wait time micro-recovery activities</p>
-          <p class="about-line">Version 0.0.1</p>
+          <p class="about-line">Version 1.0.0</p>
           <h4 class="citations-heading">Research citations</h4>
           <ul class="citations">
             {#each CITATIONS as c}

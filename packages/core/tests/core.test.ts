@@ -3,7 +3,7 @@ import { CORE_VERSION } from '../src/index.js';
 
 describe('packages/core scaffold', () => {
   it('exports CORE_VERSION', () => {
-    expect(CORE_VERSION).toBe('0.0.1');
+    expect(CORE_VERSION).toBe('1.0.0');
   });
 
   it('has no browser globals in scope', () => {

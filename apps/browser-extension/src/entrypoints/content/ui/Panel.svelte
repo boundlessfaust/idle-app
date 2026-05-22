@@ -13,6 +13,7 @@ const { siteOffset = { x: 0, y: 0 } }: PanelProps = $props();
 import {
   type Corner,
   addToRotationHistory,
+  clearRotationHistory,
   getPanelCorner,
   getPinnedNote,
   getRotationHistory,
@@ -161,6 +162,16 @@ export function handleWaitStart(at: number) {
 
     const settings = await getSettings();
     if (Date.now() < settings.muteUntil) return;
+
+    // Time-window rotation reset
+    if (settings.rotationWindowHours > 0) {
+      if (settings.lastResetAt === 0) {
+        await saveSettings({ lastResetAt: Date.now() });
+      } else if (Date.now() - settings.lastResetAt > settings.rotationWindowHours * 3_600_000) {
+        await clearRotationHistory();
+        await saveSettings({ lastResetAt: Date.now() });
+      }
+    }
 
     const history = await getRotationHistory();
     const band = elapsedToBand(Date.now() - at);
