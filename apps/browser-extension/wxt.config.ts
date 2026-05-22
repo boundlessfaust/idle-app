@@ -8,7 +8,7 @@ export default defineConfig({
   manifest: {
     name: 'Idle — AI Wait Recovery',
     short_name: 'Idle',
-    permissions: ['storage', 'tabs', 'commands', 'scripting'],
+    permissions: ['storage', 'tabs', 'commands'],
     commands: {
       'toggle-wait': {
         suggested_key: {
