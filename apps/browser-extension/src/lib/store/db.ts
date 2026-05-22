@@ -3,8 +3,6 @@ import Dexie, { type Table } from 'dexie';
 export interface SettingsRecord {
   id: 1; // singleton
   enabled: boolean;
-  promptCapture: boolean;
-  promptCaptureNudgeDismissed: boolean;
   muteUntil: number; // epoch ms; 0 = not muted
   rotationWindowHours: number; // 1 | 2 | 4 | 8; 0 = browser session
   lastResetAt: number; // epoch ms
@@ -62,8 +60,6 @@ export const db = new IdleDb();
 export const DEFAULT_SETTINGS: SettingsRecord = {
   id: 1,
   enabled: true,
-  promptCapture: false,
-  promptCaptureNudgeDismissed: false,
   muteUntil: 0,
   rotationWindowHours: 4,
   lastResetAt: 0,

@@ -7,8 +7,6 @@ export type Corner = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
 export interface Settings {
   enabled: boolean;
   detectionMode: 'auto' | 'manual';
-  promptCapture: boolean;
-  promptCaptureNudgeDismissed: boolean;
   muteUntil: number; // epoch ms; 0 = not muted
   rotationWindowHours: number; // 1 | 2 | 4 | 8; 0 = browser session
   lastResetAt: number;
@@ -23,8 +21,6 @@ export interface Settings {
 const DEFAULT_SETTINGS: Settings = {
   enabled: true,
   detectionMode: 'auto',
-  promptCapture: false,
-  promptCaptureNudgeDismissed: false,
   muteUntil: 0,
   rotationWindowHours: 4,
   lastResetAt: 0,

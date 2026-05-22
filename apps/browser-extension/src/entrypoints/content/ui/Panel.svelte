@@ -53,9 +53,6 @@ let fadeOutTimer: ReturnType<typeof setTimeout> | null = null;
 let waitStartedAt = $state<number | null>(null);
 let currentActivity = $state<Activity | null>(null);
 let currentBand = $state<WaitBand | 'unknown'>('unknown');
-let promptText = $state<string | undefined>(undefined);
-let promptCaptureEnabled = $state(false);
-let promptCaptureNudgeDismissed = $state(false);
 let pinnedNoteText = $state('');
 let pinnedNoteActive = $state(false);
 
@@ -108,8 +105,6 @@ onMount(async () => {
     getPinnedNote(),
   ]);
   corner = savedCorner;
-  promptCaptureEnabled = settings.promptCapture;
-  promptCaptureNudgeDismissed = settings.promptCaptureNudgeDismissed;
   if (pinned !== null) {
     pinnedNoteText = pinned;
     pinnedNoteActive = true;
@@ -154,12 +149,11 @@ function hidePanel() {
 }
 
 // ── Wait event API (called from content/index.ts) ──────────────────────────
-export function handleWaitStart(at: number, prompt?: string) {
+export function handleWaitStart(at: number) {
   if (debounceTimer !== null) {
     clearTimeout(debounceTimer);
   }
   mutedForWait = false;
-  promptText = prompt;
   waitStartedAt = at;
 
   debounceTimer = setTimeout(async () => {
@@ -224,17 +218,6 @@ function handleMuteWait() {
   hidePanel();
 }
 
-// ── Prompt capture ────────────────────────────────────────────────────────
-async function handleEnablePromptCapture() {
-  promptCaptureEnabled = true;
-  await saveSettings({ promptCapture: true });
-}
-
-async function handleDismissNudge() {
-  promptCaptureNudgeDismissed = true;
-  await saveSettings({ promptCaptureNudgeDismissed: true });
-}
-
 // ── Keyboard ──────────────────────────────────────────────────────────────
 function onKeyDown(e: KeyboardEvent) {
   if (e.key === 'Escape' && visible) {
@@ -270,15 +253,7 @@ export { visible };
     <DragHandle {corner} bind:dragging bind:dragX bind:dragY {onCornerChange} />
 
     {#if currentActivity}
-      <ActivityCard
-        activity={currentActivity}
-        band={currentBand}
-        {promptText}
-        {promptCaptureEnabled}
-        {promptCaptureNudgeDismissed}
-        onEnablePromptCapture={handleEnablePromptCapture}
-        onDismissNudge={handleDismissNudge}
-      />
+      <ActivityCard activity={currentActivity} band={currentBand} />
 
       <div class="panel-actions">
         <SkipButton onSkip={handleSkip} />

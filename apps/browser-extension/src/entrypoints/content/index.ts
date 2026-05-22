@@ -14,7 +14,7 @@ const SITE_OFFSETS: Record<string, { x: number; y: number }> = {
 
 // Typed handle for calling Panel's exported methods
 interface PanelHandle {
-  handleWaitStart: (at: number, prompt?: string) => void;
+  handleWaitStart: (at: number) => void;
   handleWaitEnd: () => void;
 }
 
@@ -34,7 +34,7 @@ function dispatchToPanel(msg: ExtensionMessage) {
     return;
   }
   if (msg.event.type === 'wait_start') {
-    panelHandle.handleWaitStart(msg.event.at, msg.event.promptText);
+    panelHandle.handleWaitStart(msg.event.at);
   } else if (msg.event.type === 'wait_end') {
     panelHandle.handleWaitEnd();
   }

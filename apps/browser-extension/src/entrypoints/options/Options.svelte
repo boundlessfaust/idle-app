@@ -358,26 +358,6 @@ function openShortcuts() {
       </select>
     </section>
 
-    <!-- ── Prompt capture ─────────────────────────────────────────────── -->
-    <section class="section">
-      <h2 class="section-title">Prompt Capture</h2>
-      <div class="row">
-        <div class="label-stack">
-          <span class="row-label">Show your prompt in Context activities</span>
-          <span class="sublabel">Current message only — stored locally for this session, never transmitted</span>
-        </div>
-        <button
-          class="toggle"
-          class:on={settings.promptCapture}
-          onclick={() => set('promptCapture', !settings!.promptCapture)}
-          aria-pressed={settings.promptCapture}
-          aria-label={settings.promptCapture ? 'Disable prompt capture' : 'Enable prompt capture'}
-        >
-          {settings.promptCapture ? 'On' : 'Off'}
-        </button>
-      </div>
-    </section>
-
     <!-- ── Detector status ────────────────────────────────────────────── -->
     <section class="section">
       <div class="section-header-row">
