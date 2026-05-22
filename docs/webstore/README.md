@@ -42,7 +42,7 @@ Or open each SVG in a browser, set zoom to 100%, and use a full-page screenshot 
 |---|---|---|
 | `screenshot-1.svg` | Claude.ai chat, light mode | Physical Reset — "Look 20 feet away" |
 | `screenshot-2.svg` | Claude.ai chat, Write Only panel | Write Only — "Draft your next instruction" |
-| `screenshot-3.svg` | Popup (quick controls) | N/A — shows enable/mute/detection controls |
+| `screenshot-3.svg` | Popup (quick controls) | N/A — shows enable/mute/pinned note controls |
 | `screenshot-4.svg` | Options / Settings page | N/A — shows all configurable settings |
 | `screenshot-5.svg` | Dark mode chat | Diffuse — "Close your eyes" |
 

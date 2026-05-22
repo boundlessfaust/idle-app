@@ -33,7 +33,7 @@ Feature-complete for v1. All 10 build phases shipped:
 | 4 | Side panel UI (shadow DOM injection, drag, mute, skip) |
 | 5 | claude.ai wait provider |
 | 6 | chatgpt.com wait provider |
-| 7 | Popup (master toggle, mute, detection mode, pinned note) |
+| 7 | Popup (master toggle, mute, pinned note) |
 | 8 | Options page (per-site toggles, advanced settings) |
 | 9 | Gemini and Perplexity wait providers |
 | 10 | Playwright E2E test suite (32 tests, fixture-based, CI-ready) |
@@ -108,8 +108,7 @@ shadow DOM isolation.
 
 ## Privacy
 
-All data is stored locally in IndexedDB (Dexie). No telemetry. No accounts.
-Prompt capture is opt-in and off by default; captured text never leaves the browser.
+All data is stored locally (chrome.storage.local + Dexie IndexedDB). No telemetry. No accounts. Nothing leaves the browser.
 
 ## Roadmap
 

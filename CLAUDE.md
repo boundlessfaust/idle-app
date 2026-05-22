@@ -67,9 +67,9 @@ DO NOT ADD: React, Next.js, analytics SDK, auth provider, backend, extra state l
 - See `.claude/skills/svelte-panel/SKILL.md` before modifying panel components.
 
 ### Privacy
-- No telemetry. No network calls. All data stays in Dexie (local).
-- Prompt text: session-scoped only, opt-in OFF by default, single most-recent message only.
-- NEVER store prompt text across sessions.
+- No telemetry. No network calls. All data stored locally (chrome.storage.local + Dexie).
+- Prompt capture is NOT implemented in v1. Do not add it without updating the CWS Data Usage
+  disclosure (Personal communications checkbox) and privacy policy first.
 
 ### Formatting & lint
 - Biome owns all JS/TS/JSON formatting. Do not add Prettier or ESLint configs.
@@ -89,21 +89,24 @@ export interface WaitProviderHandle { stop(): void; readonly state: WaitProvider
 export type WaitProviderState = 'idle' | 'waiting' | 'error';
 
 // packages/core/detection/types.ts
-export type WaitEvent =
-  | { type: 'wait_start'; at: number; promptText?: string }
-  | { type: 'wait_end'; at: number };
+export type WaitEvent = { type: 'wait_start'; at: number } | { type: 'wait_end'; at: number };
 export type WaitBand = 'short' | 'medium-short' | 'medium-long' | 'long' | 'unknown';
 ```
 
-## Dexie Tables (browser-extension only)
+## Local Storage (browser-extension only)
+
+**chrome.storage.local** — `lib/store/storage.ts` — used by content scripts, background SW, popup, options
+| Key | Type | Notes |
+|---|---|---|
+| `settings` | `Settings` object | enabled, muteUntil, rotationWindowHours, lastResetAt, windowN, disabledCategories, siteEnabled |
+| `rotationHistory` | `string[]` | Global activity ID history; auto-reset on window expiry |
+| `panelCorner` | `Corner` | `'bottom-right'` \| `'bottom-left'` \| `'top-right'` \| `'top-left'` |
+| `pinnedNote` | `string` | WriteOnly textarea buffer; manual clear only |
+
+**Dexie IndexedDB** — `lib/store/db.ts` — background SW only
 | Table | Key fields | Notes |
 |---|---|---|
-| `settings` | singleton | All user preferences |
-| `session` | `tabId`, `hostname` | Current wait state per tab |
-| `rotationHistory` | `activityId` | Global; reset on `lastResetAt` expiry |
-| `detectorLogs` | `detector`, `at` | 7-day TTL, 500-entry cap per detector |
-| `panelPosition` | singleton | `{ x, y }` float position |
-| `pinnedNote` | singleton | WriteOnly textarea buffer if pinned |
+| `detectorLogs` | `detector`, `at` | 7-day TTL, 500-entry cap; hardcoded in detectorLogs.ts |
 
 ## Wait Band → Activity Mapping
 | Elapsed | Band | Eligible Categories |
@@ -115,17 +118,16 @@ export type WaitBand = 'short' | 'medium-short' | 'medium-long' | 'long' | 'unkn
 | unknown | — | Start at `short`, escalate per band crossing |
 
 ## Resolved Decisions (do not re-debate these)
-- **Rotation:** Global pool across all sites. Resets on time-window expiry (default 4h, configurable).
-- **Mute 1hr:** Dexie `{ muteUntil: epoch }`. Checked on every `wait_start`.
-- **Panel:** Free-floating `position: fixed`. Drag saves `{x,y}` to Dexie. "Reset" button in handle.
+- **Rotation:** Global pool across all sites. Resets on time-window expiry (default 4h, configurable). `rotationWindowHours=0` disables auto-reset.
+- **Mute 1hr:** `muteUntil` epoch in chrome.storage.local. Checked in background SW and Panel on every `wait_start`.
+- **Panel:** Free-floating `position: fixed`. Corner saved to chrome.storage.local. "Reset" button in drag handle.
 - **Tab switching:** Singleton `ActiveWait` in background SW. Same hostname → same activity card preserved.
 - **wait_start debounce:** 500ms. Panel suppressed if `wait_end` fires within window.
-- **Rotation session:** Time-window based (not browser session). Default 4h.
+- **Rotation session:** Time-window based (not browser session). Default 4h. Implemented in Panel.svelte `handleWaitStart`.
 - **Hotkey conflict:** Detect via `chrome.commands.getAll()`; warn in popup + persistent Options banner.
-- **Prompt capture nudge:** One-time inline nudge with explicit privacy copy: "Stored locally for this session only — nothing leaves your browser."
 - **Category weights:** On/off toggles only. No sliders.
 - **Pinned note:** Manual clear only. No expiry.
-- **Log retention:** 7 days / 500 entries. Configurable in Advanced Settings.
+- **Log retention:** 7 days / 500 entries. Hardcoded constants in `detectorLogs.ts` — not user-configurable.
 
 ## Build Order (phases — complete in sequence, separate PRs)
 1. Monorepo scaffold (WXT, Svelte 5, TS, Tailwind, Biome, Vitest)
