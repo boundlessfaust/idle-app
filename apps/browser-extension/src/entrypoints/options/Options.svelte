@@ -542,18 +542,6 @@ function openShortcuts() {
     flex: 1;
   }
 
-  .label-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-  }
-
-  .sublabel {
-    font-size: 11px;
-    color: #888;
-  }
-
   /* ── Toggle button ───────────────────────────────────────────────── */
   .toggle {
     min-width: 56px;
@@ -613,10 +601,6 @@ function openShortcuts() {
   .select:focus-visible {
     outline: 2px solid #5b9e9a;
     outline-offset: 2px;
-  }
-
-  .select-sm {
-    min-width: 140px;
   }
 
   /* ── Number input ────────────────────────────────────────────────── */

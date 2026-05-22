@@ -1,4 +1,5 @@
 <script lang="ts">
+import { untrack } from 'svelte';
 import { clearPinnedNote, savePinnedNote } from '../../../lib/store/storage';
 
 interface Props {
@@ -8,8 +9,9 @@ interface Props {
 
 const { initialText = '', initialPinned = false }: Props = $props();
 
-let text = $state(initialText);
-let pinned = $state(initialPinned);
+// untrack: intentional one-time initialisation from props — parent does not re-drive these
+let text = $state(untrack(() => initialText));
+let pinned = $state(untrack(() => initialPinned));
 
 async function onInput(e: Event) {
   text = (e.target as HTMLTextAreaElement).value;
