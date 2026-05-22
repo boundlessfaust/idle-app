@@ -11,6 +11,7 @@
     "test:e2e": "pnpm --filter @idle/browser-extension run test:e2e",
     "lint": "biome check .",
     "format": "biome format --write .",
+    "check:manifest": "pnpm --filter @idle/browser-extension run check:manifest",
     "typecheck": "pnpm -r run typecheck"
   },
   "devDependencies": {
