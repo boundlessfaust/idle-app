@@ -203,6 +203,32 @@ export async function setEnabled(context: BrowserContext, enabled: boolean): Pro
   );
 }
 
+export async function setSiteEnabled(
+  context: BrowserContext,
+  hostname: string,
+  enabled: boolean,
+): Promise<void> {
+  const sw = await getSW(context);
+  if (!sw) return;
+  await sw.evaluate(
+    ([host, en]) =>
+      new Promise<void>((res) =>
+        chrome.storage.local.get(['settings'], (r) => {
+          const prev = (r.settings as Record<string, unknown> | undefined) ?? {};
+          const siteEnabled = Object.assign(
+            {},
+            (prev.siteEnabled as Record<string, boolean>) ?? {},
+            {
+              [host as string]: en as boolean,
+            },
+          );
+          chrome.storage.local.set({ settings: { ...prev, siteEnabled } }, res);
+        }),
+      ),
+    [hostname, enabled] as [string, boolean],
+  );
+}
+
 // ── Panel visibility ──────────────────────────────────────────────────────────
 
 export async function waitForPanelVisible(page: Page): Promise<void> {

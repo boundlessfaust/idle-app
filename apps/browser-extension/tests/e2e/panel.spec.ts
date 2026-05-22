@@ -5,6 +5,7 @@ import {
   resetStorage,
   setEnabled,
   setMuteUntil,
+  setSiteEnabled,
   test,
   triggerAndWaitForPanel,
   waitForPanelHidden,
@@ -136,6 +137,25 @@ for (const site of SITES) {
       extContext,
     }) => {
       await setEnabled(extContext, false);
+      await page.waitForTimeout(150);
+
+      await site.triggerStreaming(page);
+
+      await page.waitForTimeout(800);
+      await expect(page.locator('idle-panel').locator('.idle-panel')).not.toBeVisible();
+    });
+
+    // ── 9. Per-site toggle OFF ────────────────────────────────────────────────
+
+    test('siteEnabled[hostname]=false suppresses panel on wait_start', async ({
+      page,
+      extContext,
+    }) => {
+      // The fixture page sets data-idle-site on body to identify the target hostname
+      const hostname = await page.evaluate(
+        () => document.body.dataset.idleSite ?? window.location.hostname,
+      );
+      await setSiteEnabled(extContext, hostname, false);
       await page.waitForTimeout(150);
 
       await site.triggerStreaming(page);

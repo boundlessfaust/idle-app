@@ -1,7 +1,9 @@
 <script lang="ts">
 import type { ActivityCategory } from '@idle/core/activities/catalog';
 import type { Activity } from '@idle/core/activities/catalog';
+import { rotationWindowExpired } from '@idle/core/activities/rotation';
 import { selectActivity } from '@idle/core/activities/selector';
+import { elapsedToBand } from '@idle/core/detection/bands';
 import type { WaitBand } from '@idle/core/detection/types';
 import { onMount } from 'svelte';
 
@@ -164,13 +166,12 @@ export function handleWaitStart(at: number) {
     if (Date.now() < settings.muteUntil) return;
 
     // Time-window rotation reset
-    if (settings.rotationWindowHours > 0) {
-      if (settings.lastResetAt === 0) {
-        await saveSettings({ lastResetAt: Date.now() });
-      } else if (Date.now() - settings.lastResetAt > settings.rotationWindowHours * 3_600_000) {
-        await clearRotationHistory();
-        await saveSettings({ lastResetAt: Date.now() });
-      }
+    const now = Date.now();
+    if (settings.rotationWindowHours > 0 && settings.lastResetAt === 0) {
+      await saveSettings({ lastResetAt: now });
+    } else if (rotationWindowExpired(settings.rotationWindowHours, settings.lastResetAt, now)) {
+      await clearRotationHistory();
+      await saveSettings({ lastResetAt: now });
     }
 
     const history = await getRotationHistory();
@@ -199,13 +200,6 @@ export function handleWaitEnd() {
     return;
   }
   hidePanel();
-}
-
-function elapsedToBand(ms: number): WaitBand {
-  if (ms < 60_000) return 'short';
-  if (ms < 180_000) return 'medium-short';
-  if (ms < 300_000) return 'medium-long';
-  return 'long';
 }
 
 // ── Skip ──────────────────────────────────────────────────────────────────
