@@ -192,7 +192,6 @@ async function toggleCategory(cat: ActivityCategory) {
 
 // ── Actions ───────────────────────────────────────────────────────────────
 async function resetPanelPosition() {
-  await db.panelPosition.delete(1);
   panelCorner = 'bottom-right';
   await savePanelCorner('bottom-right');
 }

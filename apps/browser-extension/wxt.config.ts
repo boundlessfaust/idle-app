@@ -55,7 +55,7 @@ export default defineConfig({
         cs.matches = cs.matches?.filter((m: string) => !devOnly.includes(m));
       }
       for (const war of manifest.web_accessible_resources ?? []) {
-        if (Array.isArray(war.matches)) {
+        if (typeof war !== 'string' && Array.isArray(war.matches)) {
           war.matches = war.matches.filter((m: string) => !devOnly.includes(m));
         }
       }

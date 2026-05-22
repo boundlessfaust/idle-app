@@ -43,9 +43,6 @@ export function createSelector(
       );
     } else {
       // All eligible categories for this band are disabled — fall through to full band pool
-      console.warn(
-        `[idle] All categories disabled for band "${effectiveBand}"; using full band pool`,
-      );
       pool = activities.filter((a) => a.waitBands.includes(effectiveBand));
     }
 

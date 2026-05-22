@@ -65,7 +65,6 @@ const PANEL_H = 200;
 const MARGIN = 16;
 
 let corner = $state<Corner>('bottom-right');
-// biome-ignore lint/style/useConst: mutated via bind:dragging in template (DragHandle)
 let dragging = $state(false);
 let dragX = $state(0);
 let dragY = $state(0);

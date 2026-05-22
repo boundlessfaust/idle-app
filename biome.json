@@ -1,45 +1,57 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "error"
-      },
-      "style": {
-        "noNonNullAssertion": "warn"
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100
-  },
-  "javascript": {
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noExplicitAny": "error"
+            },
+            "style": {
+                "noNonNullAssertion": "warn"
+            }
+        }
+    },
     "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "all",
-      "semicolons": "always"
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 2,
+        "lineWidth": 100
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single",
+            "trailingCommas": "all",
+            "semicolons": "always"
+        }
+    },
+    "overrides": [
+        {
+            "include": ["**/*.svelte"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useConst": "off"
+                    }
+                }
+            }
+        }
+    ],
+    "files": {
+        "ignore": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/.output/**",
+            "**/.wxt/**",
+            "**/coverage/**",
+            "**/test-results/**",
+            "**/playwright-report/**",
+            "**/.pnpm-store/**",
+            ".devcontainer/**",
+            "pnpm-lock.yaml"
+        ]
     }
-  },
-  "files": {
-    "ignore": [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.output/**",
-      "**/.wxt/**",
-      "**/coverage/**",
-      "**/test-results/**",
-      "**/playwright-report/**",
-      "**/.pnpm-store/**",
-      ".devcontainer/**",
-      "pnpm-lock.yaml"
-    ]
-  }
 }

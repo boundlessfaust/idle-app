@@ -122,12 +122,9 @@ describe('createSelector edge cases', () => {
       act('cp-x', 'ContextPreserving', ['medium-long']), // different band — not returned
     ];
     const sel = createSelector(acts);
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const result = sel(inp({ disabledCategories: new Set(['PhysicalReset']) }));
 
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('[idle]'));
-    warnSpy.mockRestore();
     expect(result?.id).toBe('pr-a');
   });
 
