@@ -1,4 +1,5 @@
 <script lang="ts">
+import { CORE_VERSION } from '@idle/core';
 import type { ActivityCategory } from '@idle/core/activities/catalog';
 import { onMount } from 'svelte';
 import { db } from '../../lib/store/db';
@@ -412,7 +413,7 @@ function openShortcuts() {
         <div class="adv-section">
           <h3 class="adv-heading">About</h3>
           <p class="about-line">Idle — AI wait time micro-recovery activities</p>
-          <p class="about-line">Version 1.0.0</p>
+          <p class="about-line">Version {CORE_VERSION}</p>
           <h4 class="citations-heading">Research citations</h4>
           <ul class="citations">
             {#each CITATIONS as c}
