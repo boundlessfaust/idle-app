@@ -12,14 +12,28 @@ interface ExtensionMessage {
   hostname?: string;
 }
 
-// Singleton active-wait state: which tab is currently waiting
+// Singleton active-wait state: which tab is currently waiting.
+// Kept in chrome.storage.session (NOT a module variable) because MV3 kills
+// the SW after ~30s idle — well within a single AI wait. storage.session is
+// in-memory, survives SW restarts, and clears when the browser closes.
 interface ActiveWait {
   tabId: number;
   hostname: string;
   startedAt: number;
 }
 
-let activeWait: ActiveWait | null = null;
+async function getActiveWait(): Promise<ActiveWait | null> {
+  const r = await chrome.storage.session.get(['activeWait']);
+  return (r.activeWait as ActiveWait | undefined) ?? null;
+}
+
+async function setActiveWait(wait: ActiveWait | null): Promise<void> {
+  if (wait === null) {
+    await chrome.storage.session.remove(['activeWait']);
+  } else {
+    await chrome.storage.session.set({ activeWait: wait });
+  }
+}
 
 interface LogFailureMessage {
   type: 'LOG_DETECTOR_FAILURE';
@@ -38,7 +52,8 @@ export default defineBackground(() => {
   // Manual hotkey: Ctrl/Cmd+Shift+L
   // TEST_MODE builds: triggers the test sequence in the content script (5s delay → panel)
   // Production builds: directly toggles wait_start / wait_end
-  let hotkeyActive = false;
+  // Toggle state lives in chrome.storage.session so it survives SW restarts —
+  // a module variable would desync the toggle whenever the SW is killed mid-wait.
   chrome.commands.onCommand.addListener((command) => {
     if (command !== 'toggle-wait') return;
 
@@ -48,13 +63,19 @@ export default defineBackground(() => {
       return;
     }
 
-    const event: WaitEvent = hotkeyActive
-      ? { type: 'wait_end', at: Date.now() }
-      : { type: 'wait_start', at: Date.now() };
-    hotkeyActive = !hotkeyActive;
+    (async () => {
+      const r = await chrome.storage.session.get(['hotkeyActive']);
+      const hotkeyActive = r.hotkeyActive === true;
+      const event: WaitEvent = hotkeyActive
+        ? { type: 'wait_end', at: Date.now() }
+        : { type: 'wait_start', at: Date.now() };
+      await chrome.storage.session.set({ hotkeyActive: !hotkeyActive });
 
-    console.log(`[Idle] ${event.type} (hotkey)`, event);
-    broadcastPanelEvent({ type: 'PANEL_EVENT', event });
+      console.log(`[Idle] ${event.type} (hotkey)`, event);
+      broadcastPanelEvent({ type: 'PANEL_EVENT', event });
+    })().catch((err: unknown) => {
+      console.error('[Idle] Hotkey toggle failed:', err);
+    });
   });
 
   // Write detector failure logs sent from content scripts (Dexie lives here, not in content bundle)
@@ -119,6 +140,7 @@ async function handleWaitEvent(
     }
 
     // Multi-tab singleton: if another tab has an active wait on same hostname, dismiss it
+    const activeWait = await getActiveWait();
     if (activeWait && activeWait.hostname === hostname && activeWait.tabId !== tabId) {
       chrome.tabs
         .sendMessage(activeWait.tabId, {
@@ -131,11 +153,12 @@ async function handleWaitEvent(
     }
 
     if (tabId !== undefined) {
-      activeWait = { tabId, hostname, startedAt: event.at };
+      await setActiveWait({ tabId, hostname, startedAt: event.at });
     }
   } else if (event.type === 'wait_end') {
+    const activeWait = await getActiveWait();
     if (activeWait?.tabId === tabId) {
-      activeWait = null;
+      await setActiveWait(null);
     }
   }
 

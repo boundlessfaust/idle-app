@@ -217,3 +217,55 @@ for (const site of SITES) {
     });
   });
 }
+
+// ── Multi-tab singleton across SW restart ───────────────────────────────────
+// MV3 kills the background service worker after ~30s idle — easily within a
+// single AI wait. Singleton state must survive the restart (storage.session),
+// so a new wait on the same hostname still dismisses the older tab's panel.
+test.describe('multi-tab singleton', () => {
+  test('wait in a second tab dismisses first tab panel even after SW restart', async ({
+    extContext,
+    page,
+  }) => {
+    await resetStorage(extContext);
+    const site = SITES[0];
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await navigateToFixture(page, site);
+    await site.triggerStreaming(page);
+    await waitForPanelVisible(page);
+
+    // Deterministically terminate the background SW (stand-in for Chrome's
+    // ~30s idle kill). It restarts on the next extension message.
+    const marker = Math.random().toString(36).slice(2);
+    const swBefore = extContext.serviceWorkers()[0];
+    expect(swBefore).toBeTruthy();
+    await swBefore?.evaluate((m) => {
+      (globalThis as Record<string, unknown>).__idleTestMarker = m;
+    }, marker);
+    const cdp = await extContext.newCDPSession(page);
+    await cdp.send('ServiceWorker.enable');
+    await cdp.send('ServiceWorker.stopAllWorkers');
+    await page.waitForTimeout(500);
+
+    const pageB = await extContext.newPage();
+    try {
+      await pageB.emulateMedia({ reducedMotion: 'reduce' });
+      await navigateToFixture(pageB, site);
+      await site.triggerStreaming(pageB);
+      await waitForPanelVisible(pageB);
+
+      // The SW handling tab B's wait must be a fresh instance, otherwise this
+      // test proves nothing — fail loudly if the CDP kill stopped working.
+      const swAfter = extContext.serviceWorkers()[0];
+      const markerAfter = await swAfter?.evaluate(
+        () => (globalThis as Record<string, unknown>).__idleTestMarker,
+      );
+      expect(markerAfter, 'service worker was not actually restarted').toBeUndefined();
+
+      // Same hostname, new tab → the first tab's panel must be dismissed
+      await waitForPanelHidden(page);
+    } finally {
+      await pageB.close();
+    }
+  });
+});
