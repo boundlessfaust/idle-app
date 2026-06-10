@@ -30,7 +30,6 @@ import WriteOnlyTextarea from './WriteOnlyTextarea.svelte';
 
 // ── Motion + timing ───────────────────────────────────────────────────────
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const DEBOUNCE_MS = 500;
 const FADE_IN_MS = prefersReduced ? 0 : 1500;
 const FADE_OUT_MS = prefersReduced ? 0 : 400;
 
@@ -49,9 +48,14 @@ let fadingOut = $state(false);
 let mutedForWait = $state(false);
 
 // ── Timers ────────────────────────────────────────────────────────────────
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 let fadeOutTimer: ReturnType<typeof setTimeout> | null = null;
 let escalationTimer: ReturnType<typeof setTimeout> | null = null;
+
+// Monotonic wait counter — a wait_end (or a newer wait_start) bumps it so
+// any in-flight async activity selection for a stale wait is discarded.
+// The 500ms wait_start debounce lives in each provider, NOT here; the panel
+// acts on wait_start as soon as it arrives.
+let waitSeq = 0;
 
 // ── Activity state ────────────────────────────────────────────────────────
 let waitStartedAt = $state<number | null>(null);
@@ -207,17 +211,14 @@ async function onBandCrossing() {
 
 // ── Wait event API (called from content/index.ts) ──────────────────────────
 export function handleWaitStart(at: number) {
-  if (debounceTimer !== null) {
-    clearTimeout(debounceTimer);
-  }
+  const seq = ++waitSeq;
   clearEscalationTimer();
   mutedForWait = false;
   waitStartedAt = at;
 
-  debounceTimer = setTimeout(async () => {
-    debounceTimer = null;
-
+  (async () => {
     const settings = await getSettings();
+    if (seq !== waitSeq) return; // wait ended (or restarted) while reading settings
     if (Date.now() < settings.muteUntil) return;
 
     // Time-window rotation reset
@@ -230,25 +231,21 @@ export function handleWaitStart(at: number) {
     }
 
     const band = elapsedToBand(Date.now() - at);
-    currentBand = band;
-
     const activity = await pickActivity(band);
+    if (seq !== waitSeq) return; // wait ended while selecting
     if (!activity) return;
+    currentBand = band;
     currentActivity = activity;
     await addToRotationHistory(activity.id);
     showPanel();
     scheduleEscalation();
-  }, DEBOUNCE_MS);
+  })().catch((err: unknown) => {
+    console.error('[Idle] Failed to handle wait_start:', err);
+  });
 }
 
 export function handleWaitEnd() {
-  if (debounceTimer !== null) {
-    // wait_end within debounce window — suppress entirely
-    clearTimeout(debounceTimer);
-    debounceTimer = null;
-    clearEscalationTimer();
-    return;
-  }
+  waitSeq++; // discard any in-flight wait_start processing
   hidePanel();
 }
 

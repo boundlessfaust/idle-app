@@ -46,6 +46,18 @@ for (const site of SITES) {
       ).toBeVisible();
     });
 
+    test('panel appears ~500 ms after streaming starts — single debounce only', async ({
+      page,
+    }) => {
+      await site.triggerStreaming(page);
+
+      // One 500 ms debounce (in the provider) plus messaging/selection slack.
+      // A second stacked debounce in the Panel would push this past 1 000 ms.
+      await page.waitForTimeout(850);
+      const visibleAt850 = await page.locator('idle-panel').locator('.idle-panel').isVisible();
+      expect(visibleAt850).toBe(true);
+    });
+
     // ── 2. Panel dismissal ────────────────────────────────────────────────────
 
     test('panel fades out after wait_end', async ({ page }) => {

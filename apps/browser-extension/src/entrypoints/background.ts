@@ -7,6 +7,9 @@ import { getSettings } from '../lib/store/storage';
 interface ExtensionMessage {
   type: string;
   event?: WaitEvent;
+  // Effective hostname reported by the content script. On E2E fixture pages
+  // (localhost) this is the data-idle-site value, not the URL hostname.
+  hostname?: string;
 }
 
 // Singleton active-wait state: which tab is currently waiting
@@ -69,13 +72,17 @@ export default defineBackground(() => {
 
       const tabId = sender.tab?.id;
       const url = sender.tab?.url ?? '';
-      const hostname = (() => {
-        try {
-          return new URL(url).hostname;
-        } catch {
-          return '';
-        }
-      })();
+      // Prefer the content script's effective hostname (matches the keys used
+      // for siteEnabled and provider selection); fall back to the sender URL.
+      const hostname =
+        msg.hostname ??
+        (() => {
+          try {
+            return new URL(url).hostname;
+          } catch {
+            return '';
+          }
+        })();
 
       console.log(`[Idle] ${msg.event.type} (tab:${tabId ?? 'unknown'}, ${hostname})`, msg.event);
 

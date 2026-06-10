@@ -75,12 +75,18 @@ entrypoints/content/ui/
 
 ```
 User sends prompt
-  └─ Provider fires wait_start
-       └─ 500ms debounce timer starts
-            ├─ wait_end fires within 500ms → cancel, render nothing
-            └─ 500ms elapsed → 1500ms fade-in begins → panel visible
-                  └─ wait_end fires → 400ms fade-out → panel hidden
+  └─ Provider detects streaming → 500ms debounce (IN THE PROVIDER)
+       ├─ streaming ends within 500ms → wait_start never dispatched
+       └─ 500ms elapsed → provider dispatches wait_start
+            └─ Panel receives wait_start → selects activity immediately
+                 → 1500ms fade-in begins → panel visible
+                       └─ wait_end fires → 400ms fade-out → panel hidden
 ```
+
+The 500ms debounce lives in each provider (see detector-authoring skill).
+The Panel MUST NOT add a second debounce. A wait sequence counter in
+Panel.svelte discards in-flight async selection if wait_end arrives
+mid-selection.
 
 Implement with Svelte 5 runes:
 

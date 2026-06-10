@@ -97,9 +97,11 @@ export default defineContentScript({
       const { provider: claudeProvider } = await import('./detectors/claude');
 
       const dispatch = (event: WaitEvent): void => {
-        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-          console.error('[Idle] Failed to send wait event:', err);
-        });
+        chrome.runtime
+          .sendMessage({ type: 'WAIT_EVENT', event, hostname })
+          .catch((err: unknown) => {
+            console.error('[Idle] Failed to send wait event:', err);
+          });
       };
 
       claudeProvider.start(dispatch);
@@ -112,9 +114,11 @@ export default defineContentScript({
       const { provider: chatgptProvider } = await import('./detectors/chatgpt');
 
       const dispatch = (event: WaitEvent): void => {
-        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-          console.error('[Idle] Failed to send wait event:', err);
-        });
+        chrome.runtime
+          .sendMessage({ type: 'WAIT_EVENT', event, hostname })
+          .catch((err: unknown) => {
+            console.error('[Idle] Failed to send wait event:', err);
+          });
       };
 
       chatgptProvider.start(dispatch);
@@ -127,9 +131,11 @@ export default defineContentScript({
       const { provider: geminiProvider } = await import('./detectors/gemini');
 
       const dispatch = (event: WaitEvent): void => {
-        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-          console.error('[Idle] Failed to send wait event:', err);
-        });
+        chrome.runtime
+          .sendMessage({ type: 'WAIT_EVENT', event, hostname })
+          .catch((err: unknown) => {
+            console.error('[Idle] Failed to send wait event:', err);
+          });
       };
 
       geminiProvider.start(dispatch);
@@ -142,9 +148,11 @@ export default defineContentScript({
       const { provider: perplexityProvider } = await import('./detectors/perplexity');
 
       const dispatch = (event: WaitEvent): void => {
-        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-          console.error('[Idle] Failed to send wait event:', err);
-        });
+        chrome.runtime
+          .sendMessage({ type: 'WAIT_EVENT', event, hostname })
+          .catch((err: unknown) => {
+            console.error('[Idle] Failed to send wait event:', err);
+          });
       };
 
       perplexityProvider.start(dispatch);
@@ -160,9 +168,11 @@ export default defineContentScript({
       const { testModeProvider } = await import('./detectors/test-mode');
 
       const dispatch = (event: WaitEvent): void => {
-        chrome.runtime.sendMessage({ type: 'WAIT_EVENT', event }).catch((err: unknown) => {
-          console.error('[Idle] Failed to send wait event to background SW:', err);
-        });
+        chrome.runtime
+          .sendMessage({ type: 'WAIT_EVENT', event, hostname })
+          .catch((err: unknown) => {
+            console.error('[Idle] Failed to send wait event to background SW:', err);
+          });
       };
 
       let activeHandle: { stop(): void } | null = null;

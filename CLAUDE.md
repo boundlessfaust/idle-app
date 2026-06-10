@@ -122,7 +122,7 @@ export type WaitBand = 'short' | 'medium-short' | 'medium-long' | 'long' | 'unkn
 - **Mute 1hr:** `muteUntil` epoch in chrome.storage.local. Checked in background SW and Panel on every `wait_start`.
 - **Panel:** Free-floating `position: fixed`. Corner saved to chrome.storage.local. "Reset" button in drag handle.
 - **Tab switching:** Singleton `ActiveWait` in background SW. Same hostname → same activity card preserved.
-- **wait_start debounce:** 500ms. Panel suppressed if `wait_end` fires within window.
+- **wait_start debounce:** 500ms, implemented in each provider only — `wait_end` within the window means `wait_start` is never dispatched. The Panel does NOT add a second debounce; it acts on `wait_start` immediately (in-flight async selection is cancelled via a wait sequence counter).
 - **Band escalation:** Panel schedules timers from `waitStartedAt` for each threshold crossing (60s/3m/5m) via `msUntilNextBand` in core. On crossing: band updates; current activity is kept if still eligible for the new band, otherwise quietly swapped from the new band pool. Skip cycles within the current (escalated) band; Skip itself never escalates.
 - **Rotation session:** Time-window based (not browser session). Default 4h. Implemented in Panel.svelte `handleWaitStart`.
 - **Hotkey conflict:** Detect via `chrome.commands.getAll()`; warn in popup + persistent Options banner.
