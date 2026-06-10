@@ -3,7 +3,7 @@ import type { ActivityCategory } from '@idle/core/activities/catalog';
 import type { Activity } from '@idle/core/activities/catalog';
 import { rotationWindowExpired } from '@idle/core/activities/rotation';
 import { selectActivity } from '@idle/core/activities/selector';
-import { elapsedToBand } from '@idle/core/detection/bands';
+import { elapsedToBand, msUntilNextBand } from '@idle/core/detection/bands';
 import type { WaitBand } from '@idle/core/detection/types';
 import { onMount } from 'svelte';
 
@@ -51,6 +51,7 @@ let mutedForWait = $state(false);
 // ── Timers ────────────────────────────────────────────────────────────────
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 let fadeOutTimer: ReturnType<typeof setTimeout> | null = null;
+let escalationTimer: ReturnType<typeof setTimeout> | null = null;
 
 // ── Activity state ────────────────────────────────────────────────────────
 let waitStartedAt = $state<number | null>(null);
@@ -134,6 +135,7 @@ function showPanel() {
 }
 
 function hidePanel() {
+  clearEscalationTimer();
   if (!visible) return;
   fadingOut = true;
   opacity = 0;
@@ -150,11 +152,65 @@ function hidePanel() {
   );
 }
 
+// ── Activity selection ────────────────────────────────────────────────────
+async function pickActivity(band: WaitBand | 'unknown'): Promise<Activity | null> {
+  const settings = await getSettings();
+  const history = await getRotationHistory();
+  return selectActivity({
+    band,
+    history,
+    windowN: settings.windowN,
+    disabledCategories: new Set(settings.disabledCategories as ActivityCategory[]),
+  });
+}
+
+// ── Band escalation ───────────────────────────────────────────────────────
+// While a wait is active the band escalates at each threshold crossing
+// (60s → medium-short, 3m → medium-long, 5m → long). The current activity is
+// kept if it is still eligible for the new band; otherwise a quieter swap
+// pulls a fresh activity from the new band (announced via aria-live).
+function clearEscalationTimer() {
+  if (escalationTimer !== null) {
+    clearTimeout(escalationTimer);
+    escalationTimer = null;
+  }
+}
+
+function scheduleEscalation() {
+  clearEscalationTimer();
+  if (waitStartedAt === null) return;
+  const delay = msUntilNextBand(Date.now() - waitStartedAt);
+  if (delay === null) return; // already in terminal band ('long')
+  escalationTimer = setTimeout(() => {
+    escalationTimer = null;
+    onBandCrossing().catch((err: unknown) => {
+      console.error('[Idle] Band escalation failed:', err);
+    });
+  }, delay);
+}
+
+async function onBandCrossing() {
+  if (waitStartedAt === null || !visible || mutedForWait) return;
+  const band = elapsedToBand(Date.now() - waitStartedAt);
+  if (band !== currentBand) {
+    currentBand = band;
+    if (currentActivity === null || !currentActivity.waitBands.some((b) => b === band)) {
+      const activity = await pickActivity(band);
+      if (activity) {
+        currentActivity = activity;
+        await addToRotationHistory(activity.id);
+      }
+    }
+  }
+  scheduleEscalation();
+}
+
 // ── Wait event API (called from content/index.ts) ──────────────────────────
 export function handleWaitStart(at: number) {
   if (debounceTimer !== null) {
     clearTimeout(debounceTimer);
   }
+  clearEscalationTimer();
   mutedForWait = false;
   waitStartedAt = at;
 
@@ -173,21 +229,15 @@ export function handleWaitStart(at: number) {
       await saveSettings({ lastResetAt: now });
     }
 
-    const history = await getRotationHistory();
     const band = elapsedToBand(Date.now() - at);
     currentBand = band;
 
-    const activity = selectActivity({
-      band,
-      history,
-      windowN: settings.windowN,
-      disabledCategories: new Set(settings.disabledCategories as ActivityCategory[]),
-    });
-
+    const activity = await pickActivity(band);
     if (!activity) return;
     currentActivity = activity;
     await addToRotationHistory(activity.id);
     showPanel();
+    scheduleEscalation();
   }, DEBOUNCE_MS);
 }
 
@@ -196,6 +246,7 @@ export function handleWaitEnd() {
     // wait_end within debounce window — suppress entirely
     clearTimeout(debounceTimer);
     debounceTimer = null;
+    clearEscalationTimer();
     return;
   }
   hidePanel();
@@ -203,14 +254,11 @@ export function handleWaitEnd() {
 
 // ── Skip ──────────────────────────────────────────────────────────────────
 async function handleSkip() {
-  const settings = await getSettings();
-  const history = await getRotationHistory();
-  const activity = selectActivity({
-    band: currentBand,
-    history,
-    windowN: settings.windowN,
-    disabledCategories: new Set(settings.disabledCategories as ActivityCategory[]),
-  });
+  // Cycle within the band as of right now — Skip itself never escalates,
+  // but the band may have escalated since the activity was selected.
+  const band = waitStartedAt !== null ? elapsedToBand(Date.now() - waitStartedAt) : currentBand;
+  currentBand = band;
+  const activity = await pickActivity(band);
   if (!activity) return;
   currentActivity = activity;
   await addToRotationHistory(activity.id);
